@@ -1,0 +1,6 @@
+{
+  "name": "Draxor",
+  "description": "Moderní webová prezentace pro Draxor.cz postavená na Reactu a Tailwind CSS.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
