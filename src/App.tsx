@@ -70,7 +70,7 @@ const DraxorLogo = ({ className = "w-10 h-10" }: { className?: string }) => (
     >
       {/* Clean, Simple Minimalist Roof (Stříška) */}
       <path
-        d="M16 66 L50 26 L84 66"
+        d="M10 65 L50 28 L90 65"
         stroke="#d8a876"
         strokeWidth="9"
         strokeLinecap="round"
@@ -898,9 +898,9 @@ const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
       ctx.beginPath();
-      ctx.moveTo(80, 320);
-      ctx.lineTo(200, 160);
-      ctx.lineTo(320, 320);
+      ctx.moveTo(60, 315);
+      ctx.lineTo(190, 165);
+      ctx.lineTo(320, 315);
       ctx.stroke();
 
       ctx.fillStyle = "#ffffff";
@@ -917,9 +917,9 @@ const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
       ctx.lineCap = "round";
       ctx.lineJoin = "round";
       ctx.beginPath();
-      ctx.moveTo(160, 680);
-      ctx.lineTo(512, 272);
-      ctx.lineTo(864, 680);
+      ctx.moveTo(102, 665);
+      ctx.lineTo(512, 286);
+      ctx.lineTo(922, 665);
       ctx.stroke();
     }
 
@@ -968,7 +968,7 @@ const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
               <div className="w-24 h-24 flex items-center justify-center mb-3">
                 <svg viewBox="0 0 100 100" className="w-16 h-16">
                   <path
-                    d="M16 66 L50 26 L84 66"
+                    d="M10 65 L50 28 L90 65"
                     stroke="#d8a876"
                     strokeWidth="9"
                     strokeLinecap="round"
@@ -1002,7 +1002,7 @@ const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
               <div className="w-24 h-24 flex items-center justify-center mb-3">
                 <svg viewBox="0 0 100 100" className="w-16 h-16">
                   <path
-                    d="M16 66 L50 26 L84 66"
+                    d="M10 65 L50 28 L90 65"
                     stroke="#ffffff"
                     strokeWidth="9"
                     strokeLinecap="round"
@@ -1036,7 +1036,7 @@ const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
               <div className="w-24 h-24 flex items-center justify-center mb-3">
                 <svg viewBox="0 0 100 100" className="w-16 h-16">
                   <path
-                    d="M16 66 L50 26 L84 66"
+                    d="M10 65 L50 28 L90 65"
                     stroke="#120e0b"
                     strokeWidth="9"
                     strokeLinecap="round"
@@ -1071,7 +1071,7 @@ const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
                 <div className="flex items-center space-x-2">
                   <svg viewBox="0 0 100 100" className="w-8 h-8 flex-shrink-0">
                     <path
-                      d="M16 66 L50 26 L84 66"
+                      d="M10 65 L50 28 L90 65"
                       stroke="#d8a876"
                       strokeWidth="9"
                       strokeLinecap="round"

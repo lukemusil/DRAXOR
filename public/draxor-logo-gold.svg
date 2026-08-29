@@ -2,5 +2,5 @@
   <!-- Background transparent -->
   <rect width="512" height="512" fill="none"/>
   <!-- Minimalist Roof / Stříška Draxor in Gold #D8A876 -->
-  <path d="M80 340 L256 136 L432 340" fill="none" stroke="#d8a876" stroke-width="46" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M52 334 L256 144 L460 334" fill="none" stroke="#d8a876" stroke-width="46" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
