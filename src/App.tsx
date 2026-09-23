@@ -26,6 +26,11 @@ import {
 import React, { useState, useEffect } from "react";
 import aluminumPergolaImg from "./assets/images/aluminum_pergola_1787994901750.jpg";
 import woodConstructionImg from "./assets/images/wood_construction_1787995128643.jpg";
+import timberCottageRoofImg from "./assets/images/timber_cottage_roof_1788273742830.jpg";
+import acousticWoodPanelsImg from "./assets/images/acoustic_wood_panels_1788273959651.jpg";
+import luxuryLogCabinImg from "./assets/images/luxury_log_cabin_1788273979540.jpg";
+import brushedWoodTextureImg from "./assets/images/brushed_wood_texture_1788273998324.jpg";
+import modernTimberHouseImg from "./assets/images/modern_timber_house_1788274013170.jpg";
 
 // --- Types ---
 interface Product {
@@ -198,7 +203,7 @@ const Hero = () => {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0d0b09] text-[#f5f2ed] pt-20 pb-16">
       <motion.div style={{ y: y1 }} className="absolute inset-0 z-0">
         <img
-          src="https://images.unsplash.com/photo-1703782997454-8eb0d4d94e9c?auto=format&fit=crop&q=80&w=2000"
+          src={modernTimberHouseImg}
           alt="Hero Background - Moderní dřevostavba"
           className="w-full h-full object-cover opacity-45"
         />
@@ -312,25 +317,24 @@ const FeaturedProducts = () => {
     {
       id: "prod-5",
       title: "Srubový klenot Harmonie",
-      description: "Luxusní a útulná celoroční rekreační chata s duší severské přírody a masivní konstrukcí.",
+      description: "Luxusní a útulná celoroční rekreační chata s duší severské přírody a masivní konstrukcí z kulatiny.",
       category: "Dřevo",
-      image: "https://firebasestorage.googleapis.com/v0/b/studio-602750919-65399.firebasestorage.app/o/D626B423-6CBF-4669-A8DE-58D2E44EC6ED_4_5005_c.jpeg?alt=media&token=d8df64b4-837a-47a3-9e19-f3b6779000ae",
+      image: luxuryLogCabinImg,
       tag: "Bestseller",
     },
     {
       id: "prod-1",
-      title: "Moderní borovicová chata",
-      description: "Kompaktní, energeticky úsporná a stylová chata navržená pro klidné víkendové úniky.",
+      title: "Moderní dřevostavba na míru",
+      description: "Zakázková nízkoenergetická dřevostavba s precizní falcovanou střechou, modřínovou fasádou a velkoformátovým prosklením.",
       category: "Dřevo",
-      image: "https://images.unsplash.com/photo-1768846317240-1f14abd59513?auto=format&fit=crop&q=80&w=800",
-      tag: "Novinka",
+      image: modernTimberHouseImg,
     },
     {
       id: "prod-2",
       title: "Dubové akustické panely",
-      description: "Zlepšete akustiku a estetiku svého interiéru s prémiovými lamelovými panely tlumícími hluk.",
+      description: "Zlepšete akustiku a estetiku svého interiéru s prémiovými lamelovými panely na akustickém filcu.",
       category: "Interiér",
-      image: "https://storage.googleapis.com/studio-602750919-65399.appspot.com/83024806-c819-4b72-88b5-5c911b333a57",
+      image: acousticWoodPanelsImg,
       tag: "Design",
     },
   ];
@@ -446,19 +450,19 @@ const FeaturedProducts = () => {
 const MaterialsSection = () => {
   const materials: Material[] = [
     {
-      title: "Severské dřevo",
-      desc: "Využíváme borovici a severský smrk z certifikovaných udržitelných zdrojů. Ideální volba pro sruby, roubenky a masivní konstrukce.",
+      title: "Severské dřevo & Krovy",
+      desc: "Využíváme borovici, modřín a severský smrk z certifikovaných udržitelných zdrojů. Ideální volba pro sruby, roubenky a nosné tesařské konstrukce.",
       img: woodConstructionImg,
     },
     {
-      title: "Hliník & Kov",
-      desc: "Moderní bioklimatické pergoly, nosné ocelové prvky a detaily z prémiového hliníku. Maximální odolnost vůči počasí bez nutnosti údržby.",
+      title: "Hliník & Kovové střechy",
+      desc: "Moderní bioklimatické pergoly, falcované plechové krytiny a nosné ocelové prvky. Maximální odolnost vůči počasí s nulovou údržbou.",
       img: aluminumPergolaImg,
     },
     {
       title: "Kartáčované povrchy",
-      desc: "Speciální úprava palubek a trámů pro zvýraznění přirozené 3D textury a hloubky kresby dřeva s ekologickými oleji.",
-      img: "https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?auto=format&fit=crop&q=80&w=600",
+      desc: "Speciální úprava fasádních palubek a trámů pro zvýraznění přirozené 3D textury a hloubky kresby dřeva s přírodními oleji.",
+      img: brushedWoodTextureImg,
     },
   ];
 
@@ -491,7 +495,7 @@ const MaterialsSection = () => {
                 <img
                   src={mat.img}
                   alt={mat.title}
-                  className="w-full h-full object-cover grayscale-[0.35] transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105"
+                  className="w-full h-full object-cover grayscale-[0.2] transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105"
                 />
               </div>
               <h3 className="text-2xl font-bold mb-3 font-headline uppercase tracking-tight text-[#fbf8f5] group-hover:text-[#d8a876] transition-colors">
@@ -511,23 +515,33 @@ const GallerySection = () => {
 
   const images: GalleryItem[] = [
     {
-      src: "https://images.unsplash.com/photo-1542621334-a254cf47733d?auto=format&fit=crop&q=80&w=1200",
-      title: "Srubový dům v Krkonoších",
+      src: luxuryLogCabinImg,
+      title: "Masivní srubový dům Harmonie",
       category: "Sruby",
     },
     {
-      src: "https://images.unsplash.com/photo-1703782997454-8eb0d4d94e9c?auto=format&fit=crop&q=80&w=1200",
-      title: "Moderní dřevostavba u Brna",
+      src: modernTimberHouseImg,
+      title: "Moderní dřevostavba s falcovanou střechou",
       category: "Dřevostavby",
     },
     {
       src: aluminumPergolaImg,
-      title: "Hliníková pergola s integrovaným LED osvětlením",
-      category: "Pergoly",
+      title: "Bioklimatická pergola a stínění",
+      category: "Pergoly & Kov",
     },
     {
-      src: "https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?auto=format&fit=crop&q=80&w=1200",
-      title: "Kartáčovaný fasádní a interiérový obklad",
+      src: timberCottageRoofImg,
+      title: "Stavba dřevostavby a tesařský krov",
+      category: "Krovy & Střechy",
+    },
+    {
+      src: acousticWoodPanelsImg,
+      title: "Dubové akustické lamelové panely",
+      category: "Interiéry",
+    },
+    {
+      src: brushedWoodTextureImg,
+      title: "Kartáčovaný dřevěný fasádní obklad",
       category: "Obklady",
     },
   ];
@@ -547,13 +561,13 @@ const GallerySection = () => {
       </div>
 
       <div className="container mx-auto px-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {images.map((img, i) => (
             <motion.div
               key={i}
               whileHover={{ y: -4 }}
               onClick={() => setActiveImage(img)}
-              className="relative aspect-square overflow-hidden rounded-2xl group cursor-pointer border border-[#3d2e1e]/60 hover:border-[#c59b6d]/50 bg-[#16120e] transition-colors"
+              className="relative aspect-[4/3] overflow-hidden rounded-2xl group cursor-pointer border border-[#3d2e1e]/60 hover:border-[#c59b6d]/50 bg-[#16120e] transition-colors"
             >
               <img
                 src={img.src}
@@ -617,7 +631,7 @@ const BlogSection = () => {
       id: "blog-1",
       title: "Kouzlo kartáčovaného dřeva: Proč zvolit tento obklad?",
       date: "10. května 2024",
-      image: "https://images.unsplash.com/photo-1516455590571-18256e5bb9ff?auto=format&fit=crop&q=80&w=800",
+      image: brushedWoodTextureImg,
       excerpt:
         "Zvýrazněte duši dřeva ve svém interiéru či exteriéru. Kartáčované palubky nabízejí nezaměnitelnou 3D strukturu a vysokou odolnost.",
     },
@@ -625,7 +639,7 @@ const BlogSection = () => {
       id: "blog-2",
       title: "Vylepšete svůj prostor s akustickými dřevěnými obklady",
       date: "1. března 2024",
-      image: "https://storage.googleapis.com/studio-602750919-65399.appspot.com/83024806-c819-4b72-88b5-5c911b333a57",
+      image: acousticWoodPanelsImg,
       excerpt:
         "Správná akustika je klíčem k domácí pohodě i soustředění v kanceláři. Zjistěte, jak lamelové dřevěné panely dokáží transformovat váš prostor.",
     },
