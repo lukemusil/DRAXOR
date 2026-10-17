@@ -31,6 +31,8 @@ import acousticWoodPanelsImg from "./assets/images/acoustic_wood_panels_17882739
 import luxuryLogCabinImg from "./assets/images/luxury_log_cabin_1788273979540.jpg";
 import brushedWoodTextureImg from "./assets/images/brushed_wood_texture_1788273998324.jpg";
 import modernTimberHouseImg from "./assets/images/modern_timber_house_1788274013170.jpg";
+import aframeCabinHeroImg from "./assets/images/aframe_cabin_hero_1792270806419.jpg";
+import modernLuxurySrubImg from "./assets/images/modern_luxury_srub_1792271249521.jpg";
 
 // --- Types ---
 interface Product {
@@ -63,21 +65,21 @@ interface GalleryItem {
 }
 
 // --- Logo Component ---
-const DraxorLogo = ({ className = "w-10 h-10" }: { className?: string }) => (
+const DraxorLogo = ({ className = "w-12 h-12" }: { className?: string }) => (
   <div
-    className={`${className} relative rounded-xl bg-[#18130e] p-2 flex items-center justify-center border border-[#c59b6d]/40 shadow-md group-hover:border-[#d8a876] transition-all flex-shrink-0`}
+    className={`${className} relative flex items-center justify-center flex-shrink-0 transition-transform`}
   >
     <svg
       viewBox="0 0 100 100"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="w-full h-full"
+      className="w-full h-full drop-shadow-[0_2px_10px_rgba(216,168,118,0.25)]"
     >
-      {/* Clean, Simple Minimalist Roof (Stříška) */}
+      {/* Clean, Simple Minimalist Roof (Stříška) - No border or background framing */}
       <path
-        d="M10 65 L50 28 L90 65"
+        d="M6 64 L50 24 L94 64"
         stroke="#d8a876"
-        strokeWidth="9"
+        strokeWidth="11"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -109,19 +111,19 @@ const Navbar = ({ onOpenLogoDownload }: { onOpenLogoDownload?: () => void }) => 
       id="navbar"
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-[#0d0b09]/92 backdrop-blur-md py-3 shadow-lg border-b border-[#3d2e1e]/50"
-          : "bg-gradient-to-b from-[#0d0b09]/85 to-transparent py-6"
+          ? "bg-black/95 backdrop-blur-md py-3 shadow-lg border-b border-[#221c16]"
+          : "bg-gradient-to-b from-black/90 to-transparent py-6"
       }`}
     >
       <div className="container mx-auto px-6 flex justify-between items-center">
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3.5">
           <button
             onClick={onOpenLogoDownload}
             title="Klikněte pro stažení loga (SVG / PNG)"
-            className="flex items-center space-x-3 group text-left focus:outline-none"
+            className="flex items-center space-x-3.5 group text-left focus:outline-none cursor-pointer"
           >
-            <DraxorLogo className="w-10 h-10 group-hover:scale-105 transition-transform" />
-            <span className="text-2xl font-black tracking-tighter text-[#f5f2ed] font-headline group-hover:text-[#d8a876] transition-colors">
+            <DraxorLogo className="w-12 h-12 group-hover:scale-105 transition-transform" />
+            <span className="text-3xl font-black tracking-tighter text-[#f5f2ed] font-headline group-hover:text-[#d8a876] transition-colors">
               DRAXOR
             </span>
           </button>
@@ -166,7 +168,7 @@ const Navbar = ({ onOpenLogoDownload }: { onOpenLogoDownload?: () => void }) => 
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-[#0d0b09]/98 backdrop-blur-xl border-t border-[#3d2e1e]/60 flex flex-col px-6 py-8 space-y-5"
+            className="md:hidden bg-black/98 backdrop-blur-xl border-t border-[#221c16] flex flex-col px-6 py-8 space-y-5"
           >
             {navItems.map((item) => (
               <a
@@ -200,14 +202,15 @@ const Hero = () => {
   const y1 = useTransform(scrollY, [0, 600], [0, 180]);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0d0b09] text-[#f5f2ed] pt-20 pb-16">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black text-[#f5f2ed] pt-20 pb-16">
       <motion.div style={{ y: y1 }} className="absolute inset-0 z-0">
         <img
-          src={modernTimberHouseImg}
-          alt="Hero Background - Moderní dřevostavba"
-          className="w-full h-full object-cover opacity-45"
+          src={aframeCabinHeroImg}
+          alt="Hero Background - Designová A-frame chata v přírodě"
+          referrerPolicy="no-referrer"
+          className="w-full h-full object-cover opacity-50"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0d0b09]/85 via-[#120e0b]/45 to-[#0d0b09]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/45 to-black" />
       </motion.div>
 
       <div className="container mx-auto px-6 relative z-10 text-center">
@@ -229,20 +232,20 @@ const Hero = () => {
           </h1>
 
           <p className="text-lg md:text-xl text-[#d6cec3] max-w-2xl mx-auto mb-10 font-light leading-relaxed">
-            Od nadčasových dřevěných domů po moderní hliníkové konstrukce. Přinášíme architektonické sny k životu s důrazem na kvalitu a detail.
+            Od nadčasových A-frame chat a srubů po moderní dřevostavby a hliníkové konstrukce. Přinášíme architektonické sny k životu s důrazem na kvalitu a detail.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4">
             <a
               href="#produkty"
-              className="bg-[#f5eee6] text-[#15110d] px-8 sm:px-10 py-4 sm:py-5 rounded-full text-sm font-bold flex items-center space-x-2 group hover:bg-[#e8dcce] transition-all shadow-xl shadow-black/40"
+              className="bg-[#f5eee6] text-[#15110d] px-8 sm:px-10 py-4 sm:py-5 rounded-full text-sm font-bold flex items-center space-x-2 group hover:bg-[#e8dcce] transition-all shadow-xl shadow-black/80"
             >
               <span>Prozkoumat produkty</span>
               <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform text-[#8f5d2b]" />
             </a>
             <a
               href="#poptavka"
-              className="bg-[#1e1711]/60 backdrop-blur-md text-[#f5f2ed] border border-[#c59b6d]/35 hover:border-[#c59b6d]/60 px-8 sm:px-10 py-4 sm:py-5 rounded-full text-sm font-bold hover:bg-[#c59b6d]/15 transition-all"
+              className="bg-[#121212]/80 backdrop-blur-md text-[#f5f2ed] border border-[#c59b6d]/35 hover:border-[#c59b6d]/60 px-8 sm:px-10 py-4 sm:py-5 rounded-full text-sm font-bold hover:bg-[#c59b6d]/15 transition-all"
             >
               Poptat nabídku
             </a>
@@ -287,7 +290,7 @@ const Features = () => {
   ];
 
   return (
-    <section className="py-20 bg-[#120e0b] text-[#f5f2ed] border-y border-[#3d2e1e]/40">
+    <section className="py-20 bg-black text-[#f5f2ed] border-y border-[#1f1914]">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
           {features.map((f, i) => (
@@ -297,7 +300,7 @@ const Features = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="flex flex-col space-y-3 p-6 rounded-2xl bg-[#19140f] border border-[#3d2e1e]/50 hover:border-[#c59b6d]/40 transition-colors shadow-sm"
+              className="flex flex-col space-y-3 p-6 rounded-2xl bg-[#0c0c0c] border border-[#221c16] hover:border-[#c59b6d]/40 transition-colors shadow-sm"
             >
               <div className="text-[#d8a876] mb-1">{f.icon}</div>
               <h3 className="text-lg font-bold font-headline tracking-tight text-[#fbf8f5]">{f.title}</h3>
@@ -315,11 +318,19 @@ const FeaturedProducts = () => {
 
   const products: Product[] = [
     {
-      id: "prod-5",
-      title: "Srubový klenot Harmonie",
-      description: "Luxusní a útulná celoroční rekreační chata s duší severské přírody a masivní konstrukcí z kulatiny.",
+      id: "prod-aframe",
+      title: "Designová A-frame chata Alpin",
+      description: "Ikonická architektura zasazená do přírody. Štítové prosklení, masivní dřevěné trámy a prémiové detaily z falcovaného kovu.",
       category: "Dřevo",
-      image: luxuryLogCabinImg,
+      image: aframeCabinHeroImg,
+      tag: "Doporučujeme",
+    },
+    {
+      id: "prod-5",
+      title: "Moderní srubový dům Harmonie",
+      description: "Luxusní moderní srub z masivní severské kulatiny s velkoformátovým prosklením, krbem a designovou terasou.",
+      category: "Dřevo",
+      image: modernLuxurySrubImg,
       tag: "Bestseller",
     },
     {
@@ -342,7 +353,7 @@ const FeaturedProducts = () => {
   const filtered = selectedCategory === "all" ? products : products.filter((p) => p.category === selectedCategory);
 
   return (
-    <section className="py-24 bg-[#0d0b09] text-[#f5f2ed]" id="produkty">
+    <section className="py-24 bg-black text-[#f5f2ed]" id="produkty">
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
           <motion.div
@@ -368,7 +379,7 @@ const FeaturedProducts = () => {
               className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
                 selectedCategory === "all"
                   ? "bg-[#c59b6d] text-[#120e0b]"
-                  : "bg-[#18130e] text-[#b8aea2] hover:text-[#f5f2ed] border border-[#3d2e1e]/60"
+                  : "bg-[#121212] text-[#b8aea2] hover:text-[#f5f2ed] border border-[#261d14]"
               }`}
             >
               Vše
@@ -378,7 +389,7 @@ const FeaturedProducts = () => {
               className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
                 selectedCategory === "Dřevo"
                   ? "bg-[#c59b6d] text-[#120e0b]"
-                  : "bg-[#18130e] text-[#b8aea2] hover:text-[#f5f2ed] border border-[#3d2e1e]/60"
+                  : "bg-[#121212] text-[#b8aea2] hover:text-[#f5f2ed] border border-[#261d14]"
               }`}
             >
               Stavby
@@ -388,7 +399,7 @@ const FeaturedProducts = () => {
               className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
                 selectedCategory === "Interiér"
                   ? "bg-[#c59b6d] text-[#120e0b]"
-                  : "bg-[#18130e] text-[#b8aea2] hover:text-[#f5f2ed] border border-[#3d2e1e]/60"
+                  : "bg-[#121212] text-[#b8aea2] hover:text-[#f5f2ed] border border-[#261d14]"
               }`}
             >
               Interiér
@@ -396,7 +407,7 @@ const FeaturedProducts = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {filtered.map((product, index) => (
             <motion.div
               key={product.id}
@@ -406,17 +417,18 @@ const FeaturedProducts = () => {
               viewport={{ once: true }}
               className="group flex flex-col"
             >
-              <div className="relative aspect-[4/5] overflow-hidden rounded-3xl mb-6 bg-[#16120e] border border-[#3d2e1e]/60 group-hover:border-[#c59b6d]/40 transition-colors shadow-2xl">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-3xl mb-6 bg-[#0c0c0c] border border-[#221c16] group-hover:border-[#c59b6d]/40 transition-colors shadow-2xl">
                 <img
                   src={product.image}
                   alt={product.title}
+                  referrerPolicy="no-referrer"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   onError={(e) => {
                     e.currentTarget.src = "https://images.unsplash.com/photo-1542621334-a254cf47733d?auto=format&fit=crop&q=80&w=800";
                   }}
                 />
                 <div className="absolute top-5 left-5 flex space-x-2">
-                  <span className="bg-[#0d0b09]/85 backdrop-blur-md px-3.5 py-1.5 rounded-full text-[10px] uppercase font-bold tracking-widest border border-[#c59b6d]/30 text-[#ecd7be]">
+                  <span className="bg-black/85 backdrop-blur-md px-3.5 py-1.5 rounded-full text-[10px] uppercase font-bold tracking-widest border border-[#c59b6d]/30 text-[#ecd7be]">
                     {product.category}
                   </span>
                   {product.tag && (
@@ -426,7 +438,7 @@ const FeaturedProducts = () => {
                   )}
                 </div>
               </div>
-              <h3 className="text-2xl font-bold mb-2 font-headline text-[#fbf8f5] group-hover:text-[#d8a876] transition-colors uppercase tracking-tight">
+              <h3 className="text-xl font-bold mb-2 font-headline text-[#fbf8f5] group-hover:text-[#d8a876] transition-colors uppercase tracking-tight">
                 {product.title}
               </h3>
               <p className="text-[#b8aea2] text-sm leading-relaxed font-light mb-4 flex-grow">
@@ -467,7 +479,7 @@ const MaterialsSection = () => {
   ];
 
   return (
-    <section className="py-24 bg-[#100c09] text-[#f5f2ed] border-t border-[#3d2e1e]/40" id="materialy">
+    <section className="py-24 bg-black text-[#f5f2ed] border-t border-[#1f1914]" id="materialy">
       <div className="container mx-auto px-6">
         <div className="text-center mb-20 max-w-3xl mx-auto">
           <span className="text-xs uppercase tracking-[0.2em] text-[#d8a876] font-bold block mb-2">
@@ -489,9 +501,9 @@ const MaterialsSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
               viewport={{ once: true }}
-              className="group bg-[#16120e] p-6 rounded-3xl border border-[#3d2e1e]/50 hover:border-[#c59b6d]/40 transition-all shadow-md"
+              className="group bg-[#0c0c0c] p-6 rounded-3xl border border-[#221c16] hover:border-[#c59b6d]/40 transition-all shadow-md"
             >
-              <div className="aspect-[16/10] overflow-hidden rounded-2xl mb-6 border border-[#3d2e1e]/60 shadow-2xl bg-[#0d0b09]">
+              <div className="aspect-[16/10] overflow-hidden rounded-2xl mb-6 border border-[#261d14] shadow-2xl bg-black">
                 <img
                   src={mat.img}
                   alt={mat.title}
@@ -515,8 +527,13 @@ const GallerySection = () => {
 
   const images: GalleryItem[] = [
     {
-      src: luxuryLogCabinImg,
-      title: "Masivní srubový dům Harmonie",
+      src: aframeCabinHeroImg,
+      title: "Designová A-frame chata Alpin",
+      category: "A-Frame & Chaty",
+    },
+    {
+      src: modernLuxurySrubImg,
+      title: "Moderní srubový dům Harmonie",
       category: "Sruby",
     },
     {
@@ -539,15 +556,10 @@ const GallerySection = () => {
       title: "Dubové akustické lamelové panely",
       category: "Interiéry",
     },
-    {
-      src: brushedWoodTextureImg,
-      title: "Kartáčovaný dřevěný fasádní obklad",
-      category: "Obklady",
-    },
   ];
 
   return (
-    <section className="py-24 bg-[#0d0b09] text-[#f5f2ed]" id="galerie">
+    <section className="py-24 bg-black text-[#f5f2ed] border-t border-[#1f1914]" id="galerie">
       <div className="container mx-auto px-6 text-center mb-16 max-w-3xl">
         <span className="text-xs uppercase tracking-[0.2em] text-[#d8a876] font-bold block mb-2">
           Portfolio realizací
@@ -567,14 +579,15 @@ const GallerySection = () => {
               key={i}
               whileHover={{ y: -4 }}
               onClick={() => setActiveImage(img)}
-              className="relative aspect-[4/3] overflow-hidden rounded-2xl group cursor-pointer border border-[#3d2e1e]/60 hover:border-[#c59b6d]/50 bg-[#16120e] transition-colors"
+              className="relative aspect-[4/3] overflow-hidden rounded-2xl group cursor-pointer border border-[#221c16] hover:border-[#c59b6d]/50 bg-[#0c0c0c] transition-colors"
             >
               <img
                 src={img.src}
                 alt={img.title}
+                referrerPolicy="no-referrer"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0d0b09]/95 via-[#0d0b09]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
                 <span className="text-[10px] uppercase tracking-widest text-[#d8a876] mb-1 font-semibold">
                   {img.category}
                 </span>
@@ -592,7 +605,7 @@ const GallerySection = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-[#0d0b09]/96 backdrop-blur-md flex items-center justify-center p-4 sm:p-8"
+            className="fixed inset-0 z-50 bg-black/96 backdrop-blur-md flex items-center justify-center p-4 sm:p-8"
             onClick={() => setActiveImage(null)}
           >
             <div
@@ -609,7 +622,8 @@ const GallerySection = () => {
               <img
                 src={activeImage.src}
                 alt={activeImage.title}
-                className="max-h-[75vh] w-auto object-contain rounded-2xl border border-[#3d2e1e]/70"
+                referrerPolicy="no-referrer"
+                className="max-h-[75vh] w-auto object-contain rounded-2xl border border-[#261d14]"
               />
               <div className="mt-4 text-center">
                 <span className="text-xs uppercase tracking-widest text-[#d8a876] font-semibold">
@@ -646,7 +660,7 @@ const BlogSection = () => {
   ];
 
   return (
-    <section className="py-24 bg-[#120e0b] text-[#f5f2ed] border-t border-[#3d2e1e]/40" id="blog">
+    <section className="py-24 bg-black text-[#f5f2ed] border-t border-[#1f1914]" id="blog">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16 max-w-2xl mx-auto">
           <span className="text-xs uppercase tracking-[0.2em] text-[#d8a876] font-bold block mb-2">
@@ -667,9 +681,9 @@ const BlogSection = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="group bg-[#17130f] p-6 rounded-3xl border border-[#3d2e1e]/50 hover:border-[#c59b6d]/40 transition-all flex flex-col shadow-md"
+              className="group bg-[#0c0c0c] p-6 rounded-3xl border border-[#221c16] hover:border-[#c59b6d]/40 transition-all flex flex-col shadow-md"
             >
-              <div className="aspect-video overflow-hidden rounded-2xl mb-6 relative bg-[#0d0b09]">
+              <div className="aspect-video overflow-hidden rounded-2xl mb-6 relative bg-black">
                 <img
                   src={post.image}
                   alt={post.title}
@@ -730,9 +744,9 @@ const QuoteSection = () => {
   };
 
   return (
-    <section className="py-24 bg-[#f6efe9] text-[#15110d]" id="poptavka">
+    <section className="py-24 bg-black text-[#f5f2ed] border-t border-[#1f1914]" id="poptavka">
       <div className="container mx-auto px-6">
-        <div className="max-w-4xl mx-auto bg-[#120e0b] text-[#f5f2ed] rounded-[2.5rem] p-8 md:p-16 relative overflow-hidden shadow-[0_40px_100px_-20px_rgba(26,18,12,0.6)] border border-[#3d2e1e]/60">
+        <div className="max-w-4xl mx-auto bg-[#0c0c0c] text-[#f5f2ed] rounded-[2.5rem] p-8 md:p-16 relative overflow-hidden shadow-[0_40px_100px_-20px_rgba(0,0,0,0.9)] border border-[#221c16]">
           <div className="absolute top-0 right-0 w-80 h-80 bg-[#c59b6d]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
           <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -751,9 +765,9 @@ const QuoteSection = () => {
               <div className="space-y-3">
                 <a
                   href="mailto:musillukas@icloud.com"
-                  className="flex items-center space-x-4 p-4 rounded-xl border border-[#3d2e1e]/60 hover:border-[#c59b6d]/40 bg-[#18130e] hover:bg-[#201913] transition-colors group cursor-pointer"
+                  className="flex items-center space-x-4 p-4 rounded-xl border border-[#221c16] hover:border-[#c59b6d]/40 bg-[#121212] hover:bg-[#181818] transition-colors group cursor-pointer"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-[#261d15] flex items-center justify-center text-[#d8a876] group-hover:text-white transition-colors">
+                  <div className="w-10 h-10 rounded-lg bg-[#1c1611] flex items-center justify-center text-[#d8a876] group-hover:text-white transition-colors">
                     <Mail size={20} />
                   </div>
                   <div>
@@ -765,9 +779,9 @@ const QuoteSection = () => {
                 </a>
                 <a
                   href="tel:+420732527871"
-                  className="flex items-center space-x-4 p-4 rounded-xl border border-[#3d2e1e]/60 hover:border-[#c59b6d]/40 bg-[#18130e] hover:bg-[#201913] transition-colors group cursor-pointer"
+                  className="flex items-center space-x-4 p-4 rounded-xl border border-[#221c16] hover:border-[#c59b6d]/40 bg-[#121212] hover:bg-[#181818] transition-colors group cursor-pointer"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-[#261d15] flex items-center justify-center text-[#d8a876] group-hover:text-white transition-colors">
+                  <div className="w-10 h-10 rounded-lg bg-[#1c1611] flex items-center justify-center text-[#d8a876] group-hover:text-white transition-colors">
                     <Phone size={20} />
                   </div>
                   <div>
@@ -785,7 +799,7 @@ const QuoteSection = () => {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="bg-[#18130e] border border-[#c59b6d]/40 rounded-2xl p-8 text-center space-y-3"
+                  className="bg-[#121212] border border-[#c59b6d]/40 rounded-2xl p-8 text-center space-y-3"
                 >
                   <CheckCircle2 size={48} className="mx-auto text-[#d8a876]" />
                   <h4 className="text-xl font-bold font-headline text-[#fbf8f5]">Poptávka byla úspěšně odeslána</h4>
@@ -808,7 +822,7 @@ const QuoteSection = () => {
                     placeholder="Vaše jméno a příjmení *"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full bg-[#18130e] border border-[#3d2e1e]/70 rounded-xl p-4 text-sm text-[#f5f2ed] placeholder-[#8f8274] focus:outline-none focus:border-[#c59b6d] focus:bg-[#201913] transition-colors"
+                    className="w-full bg-[#121212] border border-[#221c16] rounded-xl p-4 text-sm text-[#f5f2ed] placeholder-[#8f8274] focus:outline-none focus:border-[#c59b6d] focus:bg-[#181818] transition-colors"
                   />
                   <input
                     type="email"
@@ -816,26 +830,26 @@ const QuoteSection = () => {
                     placeholder="Váš e-mail *"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full bg-[#18130e] border border-[#3d2e1e]/70 rounded-xl p-4 text-sm text-[#f5f2ed] placeholder-[#8f8274] focus:outline-none focus:border-[#c59b6d] focus:bg-[#201913] transition-colors"
+                    className="w-full bg-[#121212] border border-[#221c16] rounded-xl p-4 text-sm text-[#f5f2ed] placeholder-[#8f8274] focus:outline-none focus:border-[#c59b6d] focus:bg-[#181818] transition-colors"
                   />
                   <input
                     type="tel"
                     placeholder="Telefon (volitelné)"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full bg-[#18130e] border border-[#3d2e1e]/70 rounded-xl p-4 text-sm text-[#f5f2ed] placeholder-[#8f8274] focus:outline-none focus:border-[#c59b6d] focus:bg-[#201913] transition-colors"
+                    className="w-full bg-[#121212] border border-[#221c16] rounded-xl p-4 text-sm text-[#f5f2ed] placeholder-[#8f8274] focus:outline-none focus:border-[#c59b6d] focus:bg-[#181818] transition-colors"
                   />
                   <textarea
                     placeholder="Popište stručně váš projekt nebo představu..."
                     rows={4}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full bg-[#18130e] border border-[#3d2e1e]/70 rounded-xl p-4 text-sm text-[#f5f2ed] placeholder-[#8f8274] focus:outline-none focus:border-[#c59b6d] focus:bg-[#201913] transition-colors resize-none"
+                    className="w-full bg-[#121212] border border-[#221c16] rounded-xl p-4 text-sm text-[#f5f2ed] placeholder-[#8f8274] focus:outline-none focus:border-[#c59b6d] focus:bg-[#181818] transition-colors resize-none"
                   />
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-[#c59b6d] text-[#120e0b] hover:bg-[#d8a876] disabled:opacity-50 py-4 rounded-xl font-bold text-sm uppercase tracking-widest transition-all flex items-center justify-center space-x-3 shadow-lg shadow-black/40 cursor-pointer"
+                    className="w-full bg-[#c59b6d] text-[#120e0b] hover:bg-[#d8a876] disabled:opacity-50 py-4 rounded-xl font-bold text-sm uppercase tracking-widest transition-all flex items-center justify-center space-x-3 shadow-lg shadow-black/60 cursor-pointer"
                   >
                     <span>Odeslat poptávku</span>
                     <ArrowRight size={18} />
@@ -851,9 +865,9 @@ const QuoteSection = () => {
 };
 
 const MapSection = () => (
-  <section className="py-24 bg-[#0d0b09] border-t border-[#3d2e1e]/40" id="kontakt">
+  <section className="py-24 bg-black border-t border-[#1f1914]" id="kontakt">
     <div className="container mx-auto px-6">
-      <div className="rounded-3xl overflow-hidden border border-[#3d2e1e]/60 shadow-2xl h-[520px] relative bg-[#120e0b]">
+      <div className="rounded-3xl overflow-hidden border border-[#221c16] shadow-2xl h-[520px] relative bg-black">
         <iframe
           className="w-full h-full grayscale invert opacity-70 contrast-125"
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d83560.16483259941!2d16.5711625!3d49.20235335!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471294320875e46f%3A0x400af0f6614b280!2sBrno%2C%20Czechia!5e0!3m2!1sen!2scz!4v1689000000000"
@@ -863,9 +877,9 @@ const MapSection = () => (
           referrerPolicy="no-referrer-when-downgrade"
           title="Draxor Location Brno"
         />
-        <div className="absolute top-8 left-8 p-8 bg-[#120e0b]/92 backdrop-blur-xl border border-[#3d2e1e]/70 rounded-2xl max-w-sm text-[#f5f2ed] shadow-2xl">
-          <div className="flex items-center space-x-3 mb-4">
-            <DraxorLogo className="w-8 h-8" />
+        <div className="absolute top-8 left-8 p-8 bg-black/92 backdrop-blur-xl border border-[#221c16] rounded-2xl max-w-sm text-[#f5f2ed] shadow-2xl">
+          <div className="flex items-center space-x-3.5 mb-4">
+            <DraxorLogo className="w-11 h-11" />
             <h3 className="text-2xl font-black font-headline tracking-tight text-[#fbf8f5]">Navštivte nás</h3>
           </div>
           <p className="text-[#b8aea2] text-sm mb-6 leading-relaxed font-light">
@@ -952,16 +966,16 @@ const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 bg-[#0d0b09]/95 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
+        className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
         onClick={onClose}
       >
         <div
-          className="relative max-w-2xl w-full bg-[#16120e] border border-[#3d2e1e]/80 rounded-3xl p-6 sm:p-8 text-[#f5f2ed] shadow-2xl space-y-6"
+          className="relative max-w-2xl w-full bg-[#0c0c0c] border border-[#221c16] rounded-3xl p-6 sm:p-8 text-[#f5f2ed] shadow-2xl space-y-6"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex justify-between items-center border-b border-[#3d2e1e]/60 pb-4">
-            <div className="flex items-center space-x-3">
-              <DraxorLogo className="w-9 h-9" />
+          <div className="flex justify-between items-center border-b border-[#221c16] pb-4">
+            <div className="flex items-center space-x-3.5">
+              <DraxorLogo className="w-12 h-12" />
               <div>
                 <h3 className="text-xl font-bold font-headline uppercase text-[#fbf8f5]">Stáhnout logo DRAXOR</h3>
                 <p className="text-xs text-[#b8aea2]">Vektorové formáty (SVG) a vysoké rozlišení (PNG)</p>
@@ -969,7 +983,7 @@ const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
             </div>
             <button
               onClick={onClose}
-              className="p-2 text-[#b8aea2] hover:text-[#f5f2ed] rounded-lg hover:bg-[#201913] transition-colors"
+              className="p-2 text-[#b8aea2] hover:text-[#f5f2ed] rounded-lg hover:bg-[#181818] transition-colors"
               aria-label="Zavřít"
             >
               <X size={22} />
@@ -978,13 +992,13 @@ const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Gold Roof */}
-            <div className="bg-[#100c09] p-4 rounded-2xl border border-[#3d2e1e]/60 flex flex-col items-center text-center">
-              <div className="w-24 h-24 flex items-center justify-center mb-3">
-                <svg viewBox="0 0 100 100" className="w-16 h-16">
+            <div className="bg-[#121212] p-5 rounded-2xl border border-[#221c16] flex flex-col items-center text-center">
+              <div className="w-28 h-28 flex items-center justify-center mb-3">
+                <svg viewBox="0 0 100 100" className="w-20 h-20">
                   <path
-                    d="M10 65 L50 28 L90 65"
+                    d="M6 64 L50 24 L94 64"
                     stroke="#d8a876"
-                    strokeWidth="9"
+                    strokeWidth="11"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     fill="none"
@@ -996,7 +1010,7 @@ const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
               <div className="flex space-x-2 w-full mt-auto">
                 <button
                   onClick={() => downloadFile("/draxor-logo-gold.svg", "draxor-střiška-gold.svg")}
-                  className="flex-1 py-2 px-3 bg-[#221a14] hover:bg-[#2e231b] border border-[#c59b6d]/30 text-xs font-bold text-[#d8a876] rounded-xl flex items-center justify-center space-x-1 transition-colors"
+                  className="flex-1 py-2 px-3 bg-[#1c1611] hover:bg-[#261f18] border border-[#c59b6d]/30 text-xs font-bold text-[#d8a876] rounded-xl flex items-center justify-center space-x-1 transition-colors"
                 >
                   <Download size={13} />
                   <span>SVG</span>
@@ -1012,13 +1026,13 @@ const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
             </div>
 
             {/* White Roof */}
-            <div className="bg-[#100c09] p-4 rounded-2xl border border-[#3d2e1e]/60 flex flex-col items-center text-center">
-              <div className="w-24 h-24 flex items-center justify-center mb-3">
-                <svg viewBox="0 0 100 100" className="w-16 h-16">
+            <div className="bg-[#121212] p-5 rounded-2xl border border-[#221c16] flex flex-col items-center text-center">
+              <div className="w-28 h-28 flex items-center justify-center mb-3">
+                <svg viewBox="0 0 100 100" className="w-20 h-20">
                   <path
-                    d="M10 65 L50 28 L90 65"
+                    d="M6 64 L50 24 L94 64"
                     stroke="#ffffff"
-                    strokeWidth="9"
+                    strokeWidth="11"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     fill="none"
@@ -1030,7 +1044,7 @@ const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
               <div className="flex space-x-2 w-full mt-auto">
                 <button
                   onClick={() => downloadFile("/draxor-logo-white.svg", "draxor-střiška-white.svg")}
-                  className="flex-1 py-2 px-3 bg-[#221a14] hover:bg-[#2e231b] border border-[#3d2e1e] text-xs font-bold text-[#f5f2ed] rounded-xl flex items-center justify-center space-x-1 transition-colors"
+                  className="flex-1 py-2 px-3 bg-[#1c1611] hover:bg-[#261f18] border border-[#3d2e1e] text-xs font-bold text-[#f5f2ed] rounded-xl flex items-center justify-center space-x-1 transition-colors"
                 >
                   <Download size={13} />
                   <span>SVG</span>
@@ -1046,13 +1060,13 @@ const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
             </div>
 
             {/* Black Roof */}
-            <div className="bg-[#f5f2ed] p-4 rounded-2xl border border-[#3d2e1e]/60 flex flex-col items-center text-center">
-              <div className="w-24 h-24 flex items-center justify-center mb-3">
-                <svg viewBox="0 0 100 100" className="w-16 h-16">
+            <div className="bg-[#f5f2ed] p-5 rounded-2xl border border-[#221c16] flex flex-col items-center text-center">
+              <div className="w-28 h-28 flex items-center justify-center mb-3">
+                <svg viewBox="0 0 100 100" className="w-20 h-20">
                   <path
-                    d="M10 65 L50 28 L90 65"
+                    d="M6 64 L50 24 L94 64"
                     stroke="#120e0b"
-                    strokeWidth="9"
+                    strokeWidth="11"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     fill="none"
@@ -1080,20 +1094,20 @@ const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
             </div>
 
             {/* Full Logo with Typography */}
-            <div className="bg-[#100c09] p-4 rounded-2xl border border-[#3d2e1e]/60 flex flex-col items-center text-center">
-              <div className="w-full h-24 flex items-center justify-center px-2 mb-3">
-                <div className="flex items-center space-x-2">
-                  <svg viewBox="0 0 100 100" className="w-8 h-8 flex-shrink-0">
+            <div className="bg-[#121212] p-5 rounded-2xl border border-[#221c16] flex flex-col items-center text-center">
+              <div className="w-full h-28 flex items-center justify-center px-2 mb-3">
+                <div className="flex items-center space-x-3">
+                  <svg viewBox="0 0 100 100" className="w-11 h-11 flex-shrink-0">
                     <path
-                      d="M10 65 L50 28 L90 65"
+                      d="M6 64 L50 24 L94 64"
                       stroke="#d8a876"
-                      strokeWidth="9"
+                      strokeWidth="11"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       fill="none"
                     />
                   </svg>
-                  <span className="font-black text-xl tracking-tight text-[#fbf8f5]">DRAXOR</span>
+                  <span className="font-black text-2xl tracking-tight text-[#fbf8f5]">DRAXOR</span>
                 </div>
               </div>
               <span className="font-bold text-sm text-[#f5f2ed] mb-1">Logo s nápisem</span>
@@ -1101,7 +1115,7 @@ const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
               <div className="flex space-x-2 w-full mt-auto">
                 <button
                   onClick={() => downloadFile("/draxor-full-logo.svg", "draxor-kompletni-logo.svg")}
-                  className="flex-1 py-2 px-3 bg-[#221a14] hover:bg-[#2e231b] border border-[#c59b6d]/30 text-xs font-bold text-[#d8a876] rounded-xl flex items-center justify-center space-x-1 transition-colors"
+                  className="flex-1 py-2 px-3 bg-[#1c1611] hover:bg-[#261f18] border border-[#c59b6d]/30 text-xs font-bold text-[#d8a876] rounded-xl flex items-center justify-center space-x-1 transition-colors"
                 >
                   <Download size={13} />
                   <span>SVG</span>
@@ -1123,13 +1137,13 @@ const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
 };
 
 const Footer = ({ onOpenLogoDownload }: { onOpenLogoDownload: () => void }) => (
-  <footer className="bg-[#0a0806] text-[#f5f2ed] py-16 border-t border-[#261d14]">
+  <footer className="bg-black text-[#f5f2ed] py-16 border-t border-[#1a140f]">
     <div className="container mx-auto px-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
         <div className="space-y-4">
-          <div className="flex items-center space-x-3">
-            <DraxorLogo className="w-8 h-8" />
-            <span className="text-xl font-black tracking-tighter text-[#fbf8f5]">DRAXOR</span>
+          <div className="flex items-center space-x-3.5">
+            <DraxorLogo className="w-11 h-11" />
+            <span className="text-2xl font-black tracking-tighter text-[#fbf8f5]">DRAXOR</span>
           </div>
           <p className="text-[#b8aea2] text-sm leading-relaxed font-light">
             Tvoříme vaši vizi ve dřevě a kovu s precizností a vášní. Od nadčasových dřevostaveb po moderní hliníkové konstrukce a akustické prvky.
@@ -1137,7 +1151,7 @@ const Footer = ({ onOpenLogoDownload }: { onOpenLogoDownload: () => void }) => (
           <div className="pt-2 flex flex-wrap gap-2">
             <button
               onClick={onOpenLogoDownload}
-              className="inline-flex items-center space-x-2 bg-[#18130e] hover:bg-[#241c14] border border-[#c59b6d]/35 hover:border-[#c59b6d] px-3.5 py-2 rounded-xl text-xs font-bold text-[#d8a876] transition-all"
+              className="inline-flex items-center space-x-2 bg-[#121212] hover:bg-[#1c1611] border border-[#c59b6d]/35 hover:border-[#c59b6d] px-3.5 py-2 rounded-xl text-xs font-bold text-[#d8a876] transition-all"
             >
               <Download size={13} />
               <span>Stáhnout logo</span>
@@ -1147,21 +1161,21 @@ const Footer = ({ onOpenLogoDownload }: { onOpenLogoDownload: () => void }) => (
             <a
               href="#"
               aria-label="Facebook"
-              className="w-9 h-9 rounded-full bg-[#18130e] border border-[#3d2e1e]/60 flex items-center justify-center text-[#b8aea2] hover:text-[#d8a876] hover:border-[#c59b6d]/40 transition-colors"
+              className="w-9 h-9 rounded-full bg-[#121212] border border-[#221c16] flex items-center justify-center text-[#b8aea2] hover:text-[#d8a876] hover:border-[#c59b6d]/40 transition-colors"
             >
               <Facebook size={16} />
             </a>
             <a
               href="#"
               aria-label="Instagram"
-              className="w-9 h-9 rounded-full bg-[#18130e] border border-[#3d2e1e]/60 flex items-center justify-center text-[#b8aea2] hover:text-[#d8a876] hover:border-[#c59b6d]/40 transition-colors"
+              className="w-9 h-9 rounded-full bg-[#121212] border border-[#221c16] flex items-center justify-center text-[#b8aea2] hover:text-[#d8a876] hover:border-[#c59b6d]/40 transition-colors"
             >
               <Instagram size={16} />
             </a>
             <a
               href="#"
               aria-label="Twitter"
-              className="w-9 h-9 rounded-full bg-[#18130e] border border-[#3d2e1e]/60 flex items-center justify-center text-[#b8aea2] hover:text-[#d8a876] hover:border-[#c59b6d]/40 transition-colors"
+              className="w-9 h-9 rounded-full bg-[#121212] border border-[#221c16] flex items-center justify-center text-[#b8aea2] hover:text-[#d8a876] hover:border-[#c59b6d]/40 transition-colors"
             >
               <Twitter size={16} />
             </a>
@@ -1253,7 +1267,7 @@ const Footer = ({ onOpenLogoDownload }: { onOpenLogoDownload: () => void }) => (
         </div>
       </div>
 
-      <div className="mt-16 pt-8 border-t border-[#261d14] flex flex-col sm:flex-row justify-between items-center text-xs text-[#8f8274] gap-4">
+      <div className="mt-16 pt-8 border-t border-[#1a140f] flex flex-col sm:flex-row justify-between items-center text-xs text-[#8f8274] gap-4">
         <span>© {new Date().getFullYear()} DRAXOR.cz. Všechna práva vyhrazena.</span>
       </div>
     </div>
@@ -1265,7 +1279,7 @@ export default function App() {
   const [logoModalOpen, setLogoModalOpen] = useState(false);
 
   return (
-    <div className="bg-[#0d0b09] min-h-screen selection:bg-[#c59b6d] selection:text-[#120e0b] font-sans antialiased text-[#f5f2ed]">
+    <div className="bg-black min-h-screen selection:bg-[#c59b6d] selection:text-[#120e0b] font-sans antialiased text-[#f5f2ed]">
       <Navbar onOpenLogoDownload={() => setLogoModalOpen(true)} />
       <main>
         <Hero />
