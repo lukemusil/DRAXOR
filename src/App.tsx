@@ -22,6 +22,10 @@ import {
   CheckCircle2,
   ShieldCheck,
   Download,
+  Pin,
+  Heart,
+  MessageCircle,
+  ExternalLink,
 } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import aluminumPergolaImg from "./assets/images/aluminum_pergola_1787994901750.jpg";
@@ -102,6 +106,7 @@ const Navbar = ({ onOpenLogoDownload }: { onOpenLogoDownload?: () => void }) => 
     { name: "Produkty", id: "produkty" },
     { name: "Materiály", id: "materialy" },
     { name: "Galerie", id: "galerie" },
+    { name: "Instagram", id: "instagram" },
     { name: "Blog", id: "blog" },
     { name: "Poptávka", id: "poptavka" },
   ];
@@ -130,7 +135,7 @@ const Navbar = ({ onOpenLogoDownload }: { onOpenLogoDownload?: () => void }) => 
         </div>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex space-x-7 items-center">
+        <div className="hidden md:flex space-x-6 items-center">
           {navItems.map((item) => (
             <a
               key={item.id}
@@ -140,6 +145,17 @@ const Navbar = ({ onOpenLogoDownload }: { onOpenLogoDownload?: () => void }) => 
               {item.name}
             </a>
           ))}
+
+          <a
+            href="https://www.instagram.com/draxor.cz/?__pwa=1"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Sledujte nás na Instagramu @draxor.cz"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#121212] border border-[#221c16] hover:border-[#c59b6d]/50 text-[11px] uppercase tracking-wider font-bold text-[#b8aea2] hover:text-[#d8a876] transition-all"
+          >
+            <Instagram size={13} className="text-[#d8a876]" />
+            <span>@draxor.cz</span>
+          </a>
 
           <a
             href="#poptavka"
@@ -639,6 +655,161 @@ const GallerySection = () => {
   );
 };
 
+const InstagramFeed = () => {
+  const posts = [
+    {
+      id: "ig-1",
+      image: aframeCabinHeroImg,
+      caption: "Designová A-frame chata Alpin. Spojení čisté severské architektury, velkorysého štítového prosklení a přírodního masivu. 🌲✨",
+      likes: "1,248",
+      comments: "42",
+      pinned: true,
+      tag: "A-Frame chata",
+    },
+    {
+      id: "ig-2",
+      image: modernLuxurySrubImg,
+      caption: "Moderní srubový dům Harmonie. Masivní severská kulatina v symbióze se současným minimalismem, velkými formáty skla a krbem. 🪵🏡",
+      likes: "1,894",
+      comments: "67",
+      pinned: true,
+      tag: "Sruby",
+    },
+    {
+      id: "ig-3",
+      image: modernTimberHouseImg,
+      caption: "Zakázková nízkoenergetická dřevostavba s falcovanou střechou a modřínovým obkladem. Precizní řemeslo do posledního detailu. 🔨",
+      likes: "956",
+      comments: "31",
+      pinned: true,
+      tag: "Dřevostavby",
+    },
+    {
+      id: "ig-4",
+      image: aluminumPergolaImg,
+      caption: "Bioklimatická hliníková pergola s integrovaným stíněním. Dokonalé prodloužení obytného prostoru do zahrady bez údržby. ☀️",
+      likes: "732",
+      comments: "19",
+      pinned: false,
+      tag: "Kov & Pergoly",
+    },
+    {
+      id: "ig-5",
+      image: acousticWoodPanelsImg,
+      caption: "Dubové lamelové akustické panely na černém filcu. Teplo přírodního dřeva a špičková akustika pro moderní interiér. 📐",
+      likes: "845",
+      comments: "28",
+      pinned: false,
+      tag: "Interiér",
+    },
+    {
+      id: "ig-6",
+      image: timberCottageRoofImg,
+      caption: "Stavba tesařského krovu na míru. Každý trám ručně opracován a přesně spasován naším týmem mistrů tesařů. 🌲",
+      likes: "1,104",
+      comments: "45",
+      pinned: false,
+      tag: "Tesařství",
+    },
+  ];
+
+  return (
+    <section className="py-24 bg-black text-[#f5f2ed] border-t border-[#1f1914]" id="instagram">
+      <div className="container mx-auto px-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-14 gap-6">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="max-w-2xl"
+          >
+            <div className="inline-flex items-center space-x-2 bg-[#c59b6d]/15 border border-[#c59b6d]/30 px-3.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider mb-3 text-[#ecd7be]">
+              <Instagram size={14} className="text-[#d8a876]" />
+              <span>@draxor.cz</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-bold tracking-tighter mb-4 font-headline uppercase text-[#fbf8f5]">
+              Sledujte nás na Instagramu
+            </h2>
+            <p className="text-[#b8aea2] text-lg font-light leading-relaxed">
+              Zákulisí našich staveb, videa z výroby, čerstvé realizace z terénu a inspirace ze světa poctivého dřeva a kovu.
+            </p>
+          </motion.div>
+
+          <a
+            href="https://www.instagram.com/draxor.cz/?__pwa=1"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-gradient-to-r from-[#d8a876] to-[#c59b6d] hover:from-[#e0b483] hover:to-[#d0a475] text-[#120e0b] px-7 py-3.5 rounded-full text-xs font-bold uppercase tracking-wider flex items-center space-x-2 transition-all shadow-lg shadow-[#c59b6d]/20 hover:scale-105"
+          >
+            <Instagram size={16} />
+            <span>Sledovat @draxor.cz</span>
+            <ExternalLink size={14} />
+          </a>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
+          {posts.map((post, i) => (
+            <motion.a
+              key={post.id}
+              href="https://www.instagram.com/draxor.cz/?__pwa=1"
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.08 }}
+              className="group relative aspect-square overflow-hidden rounded-2xl bg-[#0c0c0c] border border-[#221c16] hover:border-[#c59b6d]/60 shadow-xl transition-all"
+            >
+              <img
+                src={post.image}
+                alt={post.caption}
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+
+              {/* Pinned Badge */}
+              {post.pinned && (
+                <div className="absolute top-3 left-3 z-10 flex items-center space-x-1 bg-black/85 backdrop-blur-md px-2.5 py-1 rounded-full border border-[#c59b6d]/40 text-[#ecd7be] text-[10px] font-bold tracking-wider shadow-lg">
+                  <Pin size={11} className="text-[#d8a876] fill-[#d8a876]" />
+                  <span>Připnuto</span>
+                </div>
+              )}
+
+              {/* Instagram icon top-right */}
+              <div className="absolute top-3 right-3 z-10 opacity-70 group-hover:opacity-100 transition-opacity">
+                <div className="w-7 h-7 rounded-full bg-black/75 backdrop-blur-md flex items-center justify-center text-[#f5f2ed]">
+                  <Instagram size={14} />
+                </div>
+              </div>
+
+              {/* Hover overlay with IG engagement & caption */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-black/30 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-4">
+                <div className="flex items-center space-x-4 mb-2 text-xs font-bold text-[#f5f2ed]">
+                  <div className="flex items-center space-x-1">
+                    <Heart size={13} className="text-rose-500 fill-rose-500" />
+                    <span>{post.likes}</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <MessageCircle size={13} className="text-[#d8a876]" />
+                    <span>{post.comments}</span>
+                  </div>
+                </div>
+                <p className="text-[11px] text-[#d6cec3] line-clamp-3 leading-snug font-light">
+                  {post.caption}
+                </p>
+                <span className="mt-2 inline-flex items-center space-x-1 text-[10px] font-bold uppercase tracking-wider text-[#d8a876]">
+                  <span>Otevřít na Instagramu</span>
+                  <ExternalLink size={10} />
+                </span>
+              </div>
+            </motion.a>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const BlogSection = () => {
   const posts: BlogPost[] = [
     {
@@ -789,6 +960,22 @@ const QuoteSection = () => {
                       Zavolejte nám
                     </span>
                     <span className="text-sm font-medium text-[#f5f2ed]">+420 732 527 871</span>
+                  </div>
+                </a>
+                <a
+                  href="https://www.instagram.com/draxor.cz/?__pwa=1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-4 p-4 rounded-xl border border-[#221c16] hover:border-[#c59b6d]/40 bg-[#121212] hover:bg-[#181818] transition-colors group cursor-pointer"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-[#1c1611] flex items-center justify-center text-[#d8a876] group-hover:text-white transition-colors">
+                    <Instagram size={20} />
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase tracking-widest text-[#8f8274] block font-semibold">
+                      Instagram
+                    </span>
+                    <span className="text-sm font-medium text-[#f5f2ed]">@draxor.cz</span>
                   </div>
                 </a>
               </div>
@@ -1166,11 +1353,20 @@ const Footer = ({ onOpenLogoDownload }: { onOpenLogoDownload: () => void }) => (
               <Facebook size={16} />
             </a>
             <a
-              href="#"
-              aria-label="Instagram"
+              href="https://www.instagram.com/draxor.cz/?__pwa=1"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram Draxor @draxor.cz"
               className="w-9 h-9 rounded-full bg-[#121212] border border-[#221c16] flex items-center justify-center text-[#b8aea2] hover:text-[#d8a876] hover:border-[#c59b6d]/40 transition-colors"
             >
               <Instagram size={16} />
+            </a>
+            <a
+              href="#"
+              aria-label="Facebook"
+              className="w-9 h-9 rounded-full bg-[#121212] border border-[#221c16] flex items-center justify-center text-[#b8aea2] hover:text-[#d8a876] hover:border-[#c59b6d]/40 transition-colors"
+            >
+              <Facebook size={16} />
             </a>
             <a
               href="#"
@@ -1198,6 +1394,17 @@ const Footer = ({ onOpenLogoDownload }: { onOpenLogoDownload: () => void }) => (
             <li>
               <a href="#materialy" className="hover:text-[#d8a876] transition-colors">
                 Materiály
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.instagram.com/draxor.cz/?__pwa=1"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#d8a876] transition-colors inline-flex items-center space-x-1"
+              >
+                <span>Instagram (@draxor.cz)</span>
+                <ExternalLink size={12} />
               </a>
             </li>
             <li>
@@ -1263,6 +1470,17 @@ const Footer = ({ onOpenLogoDownload }: { onOpenLogoDownload: () => void }) => (
                 musillukas@icloud.com
               </a>
             </li>
+            <li className="flex items-center space-x-3">
+              <Instagram size={16} className="text-[#d8a876]" />
+              <a
+                href="https://www.instagram.com/draxor.cz/?__pwa=1"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#d8a876] transition-colors"
+              >
+                @draxor.cz
+              </a>
+            </li>
           </ul>
         </div>
       </div>
@@ -1287,6 +1505,7 @@ export default function App() {
         <FeaturedProducts />
         <MaterialsSection />
         <GallerySection />
+        <InstagramFeed />
         <BlogSection />
         <QuoteSection />
         <MapSection />
