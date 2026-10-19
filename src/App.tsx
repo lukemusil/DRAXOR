@@ -34,6 +34,8 @@ import brushedWoodTextureImg from "./assets/images/brushed_wood_texture_17882739
 import modernTimberHouseImg from "./assets/images/modern_timber_house_1788274013170.jpg";
 import aframeCabinHeroImg from "./assets/images/aframe_cabin_hero_1792270806419.jpg";
 import modernLuxurySrubImg from "./assets/images/modern_luxury_srub_1792271249521.jpg";
+import aframeCabin50m2Img from "./assets/images/aframe_cabin_50m2_1792420411215.jpg";
+import modernSrub50m2Img from "./assets/images/modern_srub_50m2_1792420411532.jpg";
 
 // --- Types ---
 interface Product {
@@ -332,18 +334,18 @@ const FeaturedProducts = () => {
     {
       id: "prod-aframe",
       title: "Designová A-frame chata Alpin",
-      description: "Ikonická architektura zasazená do přírody. Štítové prosklení, masivní dřevěné trámy a prémiové detaily z falcovaného kovu.",
+      description: "Ikonická architektura na kompaktní ploše ~50 m². Štítové prosklení, obytné podkroví, masivní dřevěné trámy a terasa pro moderní glamping či rekreaci.",
       category: "Dřevo",
-      image: aframeCabinHeroImg,
-      tag: "Doporučujeme",
+      image: aframeCabin50m2Img,
+      tag: "50 m²",
     },
     {
       id: "prod-5",
       title: "Moderní srubový dům Harmonie",
-      description: "Luxusní moderní srub z masivní severské kulatiny s velkoformátovým prosklením, krbem a designovou terasou.",
+      description: "Kompaktní luxusní srub o výměře ~50 m² z poctivé severské kulatiny s panoramatickým prosklením, krbem a krytou vyhlídkovou terasou.",
       category: "Dřevo",
-      image: modernLuxurySrubImg,
-      tag: "Bestseller",
+      image: modernSrub50m2Img,
+      tag: "50 m²",
     },
     {
       id: "prod-1",
@@ -539,13 +541,13 @@ const GallerySection = () => {
 
   const images: GalleryItem[] = [
     {
-      src: aframeCabinHeroImg,
-      title: "Designová A-frame chata Alpin",
+      src: aframeCabin50m2Img,
+      title: "Designová A-frame chata Alpin (50 m²)",
       category: "A-Frame & Chaty",
     },
     {
-      src: modernLuxurySrubImg,
-      title: "Moderní srubový dům Harmonie",
+      src: modernSrub50m2Img,
+      title: "Moderní srubový dům Harmonie (50 m²)",
       category: "Sruby",
     },
     {
