@@ -6,7 +6,7 @@ const root = process.cwd();
 const templatePath = path.join(root, "dist/index.html");
 const template = fs.readFileSync(templatePath, "utf8");
 const serverEntry = path.join(root, "dist-ssr/entry-server.js");
-const { render, documentMeta } = await import(pathToFileURL(serverEntry).href);
+const { render, documentMeta, htmlRoutes, sitemapPaths } = await import(pathToFileURL(serverEntry).href);
 
 function escapeAttr(value) {
   return value
@@ -36,6 +36,10 @@ function applyMeta(html, meta) {
   html = replaceAttr("og-description", meta.description);
   html = replaceAttr("twitter-title", meta.title);
   html = replaceAttr("twitter-description", meta.description);
+  if (meta.ogImage) {
+    html = replaceAttr("og-image", meta.ogImage);
+    html = replaceAttr("twitter-image", meta.ogImage);
+  }
 
   const jsonLd = meta.jsonLd
     ? `<script type="application/ld+json">${JSON.stringify(meta.jsonLd).replaceAll("<", "\\u003c")}</script>`
@@ -50,20 +54,54 @@ function applyMeta(html, meta) {
   return html;
 }
 
-const routes = [
-  { url: "/", out: path.join(root, "dist/index.html") },
-  { url: "/ochrana-osobnich-udaju", out: path.join(root, "dist/ochrana-osobnich-udaju/index.html") },
-  { url: "/404", out: path.join(root, "dist/404.html") },
-];
+const routes = htmlRoutes().map((route) => ({
+  ...route,
+  out: path.join(root, route.file),
+}));
 
 for (const route of routes) {
   const appHtml = render(route.url);
   const meta = documentMeta(route.url);
   let html = template.replace('<div id="root"></div>', `<div id="root">${appHtml}</div>`);
   html = applyMeta(html, meta);
+  const h1Count = html.match(/<h1[\s>]/g)?.length ?? 0;
+  if (!html.includes(route.title) || !html.includes(route.h1) || h1Count !== 1) {
+    console.error(`Trasa ${route.url} nemá vlastní title nebo právě jedno H1 (${route.title} / ${route.h1}, h1=${h1Count}).`);
+    process.exit(1);
+  }
+  if (meta.jsonLd?.["@type"] === "FAQPage") {
+    const questions = meta.jsonLd.mainEntity ?? [];
+    if (!questions.length) {
+      console.error(`Trasa ${route.url} má prázdné FAQ.`);
+      process.exit(1);
+    }
+    for (const question of questions) {
+      if (!html.includes(question.name) || !html.includes(question.acceptedAnswer.text.slice(0, 40))) {
+        console.error(`Trasa ${route.url} nevykreslila otázku: ${question.name}`);
+        process.exit(1);
+      }
+    }
+  }
   fs.mkdirSync(path.dirname(route.out), { recursive: true });
   fs.writeFileSync(route.out, html);
   console.log(`prerender ${route.url} → ${path.relative(root, route.out)} (${appHtml.length} znaků HTML)`);
+}
+
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${sitemapPaths()
+  .map((loc) => `  <url><loc>${loc}</loc></url>`)
+  .join("\n")}
+</urlset>
+`;
+fs.writeFileSync(path.join(root, "dist/sitemap.xml"), sitemap);
+fs.writeFileSync(
+  path.join(root, "dist/robots.txt"),
+  "User-agent: *\nAllow: /\n\nSitemap: https://draxor.cz/sitemap.xml\n",
+);
+if (sitemap.includes("/blog")) {
+  console.error("Prázdný blog nesmí být v sitemapě.");
+  process.exit(1);
 }
 
 const home = fs.readFileSync(path.join(root, "dist/index.html"), "utf8");
@@ -155,14 +193,28 @@ if (home.includes("Poptávka byla úspěšně odeslána")) {
   process.exit(1);
 }
 
-for (const [label, html] of [
-  ["úvod", home],
-  ["zásady", privacy],
-]) {
-  if (html.includes("[DOPLNIT")) {
-    console.error(`V prerenderu „${label}“ je vidět zástupný text [DOPLNIT].`);
+function walk(dir) {
+  const found = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) found.push(...walk(full));
+    else found.push(full);
+  }
+  return found;
+}
+
+const marker = "[DOPL" + "NIT";
+for (const file of walk(path.join(root, "dist"))) {
+  if (!/\.(html|js|css|txt|xml|json|svg)$/.test(file)) continue;
+  const text = fs.readFileSync(file, "utf8");
+  if (text.includes(marker)) {
+    console.error(`V buildu je nepublikovaný zástupný text: ${path.relative(root, file)}`);
     process.exit(1);
   }
+}
+if (home.includes("Zastavte se na kávu") || home.includes("Cena od")) {
+  console.error("Úvod nesmí zvát na návštěvu provozovny ani vypisovat cenu.");
+  process.exit(1);
 }
 
 const jsonLdMatch = home.match(/<script type="application\/ld\+json">(.*?)<\/script>/);
@@ -171,12 +223,21 @@ if (!jsonLdMatch) {
   process.exit(1);
 }
 const jsonLd = JSON.parse(jsonLdMatch[1]);
-if (jsonLd.name !== "Lukáš Musil" || jsonLd.legalName !== "Lukáš Musil" || jsonLd.taxID !== "13999508") {
-  console.error("JSON-LD neobsahuje obchodní jméno nebo IČO.");
+if (jsonLd["@type"] !== "HomeAndConstructionBusiness" || jsonLd.name !== "DRAXOR") {
+  console.error("JSON-LD musí být HomeAndConstructionBusiness se jménem DRAXOR.");
   process.exit(1);
 }
-if (jsonLd.address?.addressLocality !== "Brno" || jsonLd.address?.streetAddress) {
-  console.error("JSON-LD musí mít sídlo jen jako Brno, bez ulice.");
+if (jsonLd.legalName !== "Lukáš Musil" || jsonLd.identifier?.value !== "13999508") {
+  console.error("JSON-LD neobsahuje legalName nebo IČO.");
+  process.exit(1);
+}
+if (jsonLd.address || jsonLd.telephone !== "+420732527871") {
+  console.error("JSON-LD nesmí mít ulici a musí mít telefon.");
+  process.exit(1);
+}
+const areas = JSON.stringify(jsonLd.areaServed || {});
+if (!areas.includes("Brno") || !areas.includes("Jihomoravský kraj")) {
+  console.error("JSON-LD nemá oblast Brno a Jihomoravský kraj.");
   process.exit(1);
 }
 

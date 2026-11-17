@@ -2,18 +2,22 @@ import { StrictMode } from "react";
 import { renderToString } from "react-dom/server";
 import App from "./App";
 import { images } from "./image-manifest";
+import { articles } from "./content/articles";
+import { htmlRoutes, resolvePage, sitemapPaths } from "./content/routes";
 import {
   analyticsHeadHtml,
   buildLocalBusinessJsonLd,
   enabledAnalytics,
   googleVerificationToken,
   normalizePath,
-  pageKind,
   priceFromLabel,
   productPrices,
   seo,
+  seznamVerificationToken,
   siteConfig,
 } from "./site.config";
+
+export { htmlRoutes, sitemapPaths };
 
 export function render(url: string): string {
   const path = normalizePath(url);
@@ -24,12 +28,40 @@ export function render(url: string): string {
   );
 }
 
+function faqJsonLd(product: { faqs: { q: string; a: string }[] }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: product.faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.q,
+      acceptedAnswer: { "@type": "Answer", text: faq.a },
+    })),
+  };
+}
+
 export function documentMeta(url: string) {
   const path = normalizePath(url);
-  const kind = pageKind(path);
-  const meta = kind === "privacy" ? seo.privacy : kind === "home" ? seo.home : seo.notFound;
+  const page = resolvePage(path);
+  const product = page.kind === "product" ? page.product : null;
+  const article = page.kind === "article" ? page.article : null;
+  const meta =
+    page.kind === "privacy"
+      ? seo.privacy
+      : page.kind === "home"
+        ? seo.home
+        : product
+          ? { title: product.title, description: product.description }
+          : page.kind === "blog"
+            ? {
+                title: "Blog | DRAXOR",
+                description: "Články DRAXOR o chatách, srubech a dřevostavbách. Zatím je připravujeme.",
+              }
+            : article
+              ? { title: `${article.title} | DRAXOR`, description: article.description }
+              : seo.notFound;
   const canonical =
-    kind === "privacy" ? `${siteConfig.siteUrl}${path}` : kind === "home" ? `${siteConfig.siteUrl}/` : `${siteConfig.siteUrl}/`;
+    page.kind === "home" ? `${siteConfig.siteUrl}/` : `${siteConfig.siteUrl}${path === "/404" ? "/" : path}`;
 
   const hero = images.hero;
   const preload = {
@@ -38,16 +70,24 @@ export function documentMeta(url: string) {
     imagesizes: "100vw",
   };
 
+  const galleryImage = product?.gallery[0] ? images[product.gallery[0].image].jpg.at(-1)?.src : null;
+  const ogImage = galleryImage ? `${siteConfig.siteUrl}${galleryImage}` : `${siteConfig.siteUrl}/og-image.jpg`;
+
   return {
     title: meta.title,
     description: meta.description,
     canonical,
-    robots: kind === "notFound" ? "noindex, follow" : "index, follow",
-    jsonLd: kind === "home" ? buildLocalBusinessJsonLd() : null,
-    preloadHero: kind === "home" ? preload : null,
+    ogImage,
+    robots: page.kind === "notFound" || (page.kind === "blog" && articles.length === 0) ? "noindex, follow" : "index, follow",
+    jsonLd:
+      page.kind === "home" ? buildLocalBusinessJsonLd() : product ? faqJsonLd(product) : null,
+    preloadHero: page.kind === "home" ? preload : null,
     extraHead: [
       googleVerificationToken()
         ? `<meta name="google-site-verification" content="${googleVerificationToken()}" />`
+        : "",
+      seznamVerificationToken()
+        ? `<meta name="seznam-wmt" content="${seznamVerificationToken()}" />`
         : "",
       analyticsHeadHtml(),
     ]

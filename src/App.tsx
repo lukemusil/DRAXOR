@@ -27,13 +27,16 @@ import React, { useState, useEffect } from "react";
 import { ConfigValue } from "./components/ConfigValue";
 import { ResponsiveImage, type ResponsiveAsset } from "./components/ResponsiveImage";
 import { images } from "./image-manifest";
+import { articles } from "./content/articles";
+import { resolvePage } from "./content/routes";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy";
+import { BlogArticle, BlogIndex } from "./pages/BlogPages";
+import { ProductPage } from "./pages/ProductPage";
 import {
   budgetRanges,
   buildingTypes,
   formspreeEndpoint,
   normalizePath,
-  pageKind,
   priceFromLabel,
   routes,
   siteConfig,
@@ -52,6 +55,7 @@ interface Product {
   image: ResponsiveAsset;
   tag?: string;
   buildingType: (typeof buildingTypes)[number];
+  href: string;
 }
 
 interface Material {
@@ -102,7 +106,7 @@ const Navbar = ({ onHome }: { onHome: boolean }) => {
     { name: "Spolupráce", id: "spoluprace" },
     { name: "Materiály", id: "materialy" },
     { name: "Galerie", id: "galerie" },
-    ...(siteConfig.showBlog ? [{ name: "Blog", id: "blog" }] : []),
+    ...(siteConfig.showBlog && articles.length > 0 ? [{ name: "Blog", id: "blog" }] : []),
     { name: "Poptávka", id: "poptavka" },
   ];
 
@@ -326,7 +330,7 @@ const Features = () => {
   );
 };
 
-const FeaturedProducts = ({ onInquire }: { onInquire: (buildingType: string) => void }) => {
+const FeaturedProducts = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const products: Product[] = [
@@ -338,6 +342,7 @@ const FeaturedProducts = ({ onInquire }: { onInquire: (buildingType: string) => 
       image: images.aframe,
       tag: "50 m²",
       buildingType: "A-frame chata",
+      href: "/a-frame-chata",
     },
     {
       id: "prod-5",
@@ -347,6 +352,7 @@ const FeaturedProducts = ({ onInquire }: { onInquire: (buildingType: string) => 
       image: images.srub,
       tag: "50 m²",
       buildingType: "Srub",
+      href: "/srub",
     },
     {
       id: "prod-1",
@@ -355,6 +361,17 @@ const FeaturedProducts = ({ onInquire }: { onInquire: (buildingType: string) => 
       category: "Stavby",
       image: images.timberHouse,
       buildingType: "Dřevostavba",
+      href: "/drevostavby",
+    },
+    {
+      id: "prod-pergola",
+      title: "Bioklimatická pergola",
+      description:
+        "Hliníková pergola s natáčecími lamelami a stíněním. Odolná konstrukce s minimální údržbou, navržená na míru k domu, chatě nebo terase.",
+      category: "Stavby",
+      image: images.pergola,
+      buildingType: "Hliníková pergola",
+      href: "/bioklimaticke-pergoly",
     },
     {
       id: "prod-2",
@@ -364,6 +381,7 @@ const FeaturedProducts = ({ onInquire }: { onInquire: (buildingType: string) => 
       image: images.acoustic,
       tag: "Design",
       buildingType: "Akustické panely",
+      href: "/akusticke-panely",
     },
   ];
 
@@ -437,7 +455,10 @@ const FeaturedProducts = ({ onInquire }: { onInquire: (buildingType: string) => 
               viewport={{ once: true }}
               className="group flex flex-col"
             >
-              <div className="relative aspect-[4/5] overflow-hidden rounded-3xl mb-6 bg-[#0c0c0c] border border-[#221c16] group-hover:border-[#c59b6d]/40 transition-colors shadow-2xl">
+              <a
+                href={product.href}
+                className="relative block aspect-[4/5] overflow-hidden rounded-3xl mb-6 bg-[#0c0c0c] border border-[#221c16] group-hover:border-[#c59b6d]/40 transition-colors shadow-2xl"
+              >
                 <ResponsiveImage
                   image={product.image}
                   alt={product.title}
@@ -454,9 +475,9 @@ const FeaturedProducts = ({ onInquire }: { onInquire: (buildingType: string) => 
                     </span>
                   )}
                 </div>
-              </div>
+              </a>
               <h3 className="text-xl font-bold mb-2 font-headline text-[#fbf8f5] group-hover:text-[#d8a876] transition-colors uppercase tracking-tight">
-                {product.title}
+                <a href={product.href}>{product.title}</a>
               </h3>
               {priceFromLabel(product.id) && (
                 <p className="text-sm font-semibold text-[#d8a876] mb-2">{priceFromLabel(product.id)}</p>
@@ -465,16 +486,26 @@ const FeaturedProducts = ({ onInquire }: { onInquire: (buildingType: string) => 
                 {product.description}
               </p>
               <a
-                href="#poptavka"
-                onClick={() => onInquire(product.buildingType)}
+                href={product.href}
                 className="inline-flex items-center space-x-2 text-xs uppercase font-bold tracking-widest text-[#d8a876] hover:text-[#f5eee6] transition-colors group-hover:translate-x-1 duration-300"
               >
-                <span>Poptat tento model</span>
+                <span>Více o produktu</span>
                 <ArrowRight size={14} />
               </a>
             </motion.div>
           ))}
         </div>
+        <p className="mt-10 text-sm text-[#b8aea2] font-light">
+          Stavíme také{" "}
+          <a href="/altany" className="text-[#d8a876] underline underline-offset-4">
+            dřevěné altány
+          </a>{" "}
+          a{" "}
+          <a href="/terasy" className="text-[#d8a876] underline underline-offset-4">
+            dřevěné terasy
+          </a>
+          .
+        </p>
       </div>
     </section>
   );
@@ -1228,10 +1259,11 @@ const MapSection = () => {
           <div className="absolute top-8 left-8 p-8 bg-black/92 backdrop-blur-xl border border-[#221c16] rounded-2xl max-w-sm text-[#f5f2ed] shadow-2xl">
             <div className="flex items-center space-x-3.5 mb-4">
               <DraxorLogo className="h-8 w-auto" />
-              <h2 className="text-2xl font-black font-headline tracking-tight text-[#fbf8f5]">Navštivte nás</h2>
+              <h2 className="text-2xl font-black font-headline tracking-tight text-[#fbf8f5]">Domluvte konzultaci</h2>
             </div>
             <p className="text-[#b8aea2] text-sm mb-6 leading-relaxed font-light">
-              Najdete nás v srdci jižní Moravy v Brně. Zastavte se na kávu a proberme váš projekt osobně s naším architektem.
+              Sídlíme v Brně. Veřejné prodejní prostory nemáme. Zavolejte a domluvíme telefonickou konzultaci, nebo
+              přijedeme za vámi na místo stavby.
             </p>
             <div className="space-y-3 text-sm">
               <p className="flex items-center space-x-3 text-[#e6decb]">
@@ -1388,9 +1420,9 @@ const Footer = ({ onHome }: { onHome: boolean }) => (
                 Jak spolupráce probíhá
               </a>
             </li>
-            {siteConfig.showBlog && (
+            {siteConfig.showBlog && articles.length > 0 && (
               <li>
-                <a href={sectionHref(onHome, "blog")} className="hover:text-[#d8a876] transition-colors">
+                <a href="/blog" className="hover:text-[#d8a876] transition-colors">
                   Blog & Tipy
                 </a>
               </li>
@@ -1412,23 +1444,38 @@ const Footer = ({ onHome }: { onHome: boolean }) => (
           <h2 className={footerHeading}>Služby</h2>
           <ul className="space-y-3 text-sm text-[#b8aea2] font-light">
             <li>
-              <a href={sectionHref(onHome, "produkty")} className="hover:text-[#d8a876] transition-colors">
-                Dřevostavby na klíč
+              <a href="/drevostavby" className="hover:text-[#d8a876] transition-colors">
+                Dřevostavby na míru
               </a>
             </li>
             <li>
-              <a href={sectionHref(onHome, "produkty")} className="hover:text-[#d8a876] transition-colors">
-                Sruby a roubenky
+              <a href="/a-frame-chata" className="hover:text-[#d8a876] transition-colors">
+                A-frame chaty
               </a>
             </li>
             <li>
-              <a href={sectionHref(onHome, "materialy")} className="hover:text-[#d8a876] transition-colors">
-                Hliníkové bioklimatické pergoly
+              <a href="/srub" className="hover:text-[#d8a876] transition-colors">
+                Sruby
               </a>
             </li>
             <li>
-              <a href={sectionHref(onHome, "materialy")} className="hover:text-[#d8a876] transition-colors">
-                Kartáčované akustické panely
+              <a href="/bioklimaticke-pergoly" className="hover:text-[#d8a876] transition-colors">
+                Bioklimatické pergoly
+              </a>
+            </li>
+            <li>
+              <a href="/altany" className="hover:text-[#d8a876] transition-colors">
+                Dřevěné altány
+              </a>
+            </li>
+            <li>
+              <a href="/terasy" className="hover:text-[#d8a876] transition-colors">
+                Dřevěné terasy
+              </a>
+            </li>
+            <li>
+              <a href="/akusticke-panely" className="hover:text-[#d8a876] transition-colors">
+                Akustické panely
               </a>
             </li>
             <li>
@@ -1556,11 +1603,14 @@ function MobileCallButton() {
 export default function App({ initialPath }: { initialPath?: string }) {
   const [inquiryType, setInquiryType] = useState("");
   const path = normalizePath(initialPath ?? (typeof window !== "undefined" ? window.location.pathname : "/"));
-  const kind = pageKind(path);
-  const onHome = kind === "home";
+  const page = resolvePage(path);
+  const onHome = page.kind === "home";
 
   useEffect(() => {
-    if (!onHome || typeof window === "undefined" || !window.location.hash) return;
+    if (!onHome || typeof window === "undefined") return;
+    const typ = new URLSearchParams(window.location.search).get("typ");
+    if (typ) setInquiryType(typ);
+    if (!window.location.hash) return;
     const target = document.querySelector(window.location.hash);
     if (target) target.scrollIntoView();
   }, [onHome]);
@@ -1569,22 +1619,25 @@ export default function App({ initialPath }: { initialPath?: string }) {
     <div className="bg-black min-h-screen selection:bg-[#c59b6d] selection:text-[#120e0b] font-sans antialiased text-[#f5f2ed]">
       <Navbar onHome={onHome} />
       <main>
-        {kind === "home" && (
+        {page.kind === "home" && (
           <>
             <Hero />
             <Features />
-            <FeaturedProducts onInquire={setInquiryType} />
+            <FeaturedProducts />
             <ProcessSection />
             <MaterialsSection />
             <GallerySection />
             <InstagramFeed />
-            {siteConfig.showBlog && <BlogSection />}
+            {siteConfig.showBlog && articles.length > 0 && <BlogSection />}
             <QuoteSection preferredType={inquiryType} />
             <MapSection />
           </>
         )}
-        {kind === "privacy" && <PrivacyPolicy />}
-        {kind === "notFound" && <NotFound />}
+        {page.kind === "privacy" && <PrivacyPolicy />}
+        {page.kind === "product" && <ProductPage product={page.product} />}
+        {page.kind === "blog" && <BlogIndex />}
+        {page.kind === "article" && <BlogArticle article={page.article} />}
+        {page.kind === "notFound" && <NotFound />}
       </main>
       <Footer onHome={onHome} />
       <MobileCallButton />

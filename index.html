@@ -3,6 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (function () {
+        var category = {
+          "a-frame": "/a-frame-chata",
+          "a-frame-chaty": "/a-frame-chata",
+          chaty: "/a-frame-chata",
+          sruby: "/srub",
+          srub: "/srub",
+          drevostavby: "/drevostavby",
+          pergoly: "/bioklimaticke-pergoly",
+          altany: "/altany",
+          terasy: "/terasy",
+          "akusticke-panely": "/akusticke-panely",
+        };
+        var ids = {};
+        var path = location.pathname.replace(/\/+$/, "") || "/";
+        var query = new URLSearchParams(location.search);
+        var target = null;
+        if (query.get("page_id")) target = ids["page_id:" + query.get("page_id")] || "/";
+        else if (query.get("p")) target = ids["p:" + query.get("p")] || "/";
+        else if (path.indexOf("/category/") === 0) {
+          var slug = decodeURIComponent(path.split("/")[2] || "");
+          target = category[slug] || "/";
+        }
+        if (target && target !== path) location.replace(target);
+      })();
+    </script>
     <title>DRAXOR – Dřevostavby, A-frame chaty, sruby a pergoly</title>
     <meta
       data-seo="description"
@@ -21,7 +48,7 @@
       property="og:description"
       content="DRAXOR z Brna navrhuje a staví dřevostavby, A-frame chaty, sruby, hliníkové pergoly a akustické dřevěné panely. Nezávazná kalkulace na míru."
     />
-    <meta property="og:image" content="https://draxor.cz/og-image.jpg" />
+    <meta data-seo="og-image" property="og:image" content="https://draxor.cz/og-image.jpg" />
     <meta property="og:image:alt" content="Designová A-frame chata DRAXOR v přírodě" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -32,7 +59,7 @@
       name="twitter:description"
       content="DRAXOR z Brna navrhuje a staví dřevostavby, A-frame chaty, sruby, hliníkové pergoly a akustické dřevěné panely. Nezávazná kalkulace na míru."
     />
-    <meta name="twitter:image" content="https://draxor.cz/og-image.jpg" />
+    <meta data-seo="twitter-image" name="twitter:image" content="https://draxor.cz/og-image.jpg" />
     <meta name="theme-color" content="#14100c" />
     <link rel="icon" href="/favicon.ico?v=3" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=3" />

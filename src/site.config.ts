@@ -38,9 +38,9 @@ export const siteConfig = {
   /**
    * Jak dlouho se uchovávají údaje z poptávky.
    * Příklad: „24 měsíců od posledního kontaktu“.
-   * Dokud tu je zástupný text, na webu se neukáže — zásady použijí neutrální větu.
+   * Prázdný řetězec = lhůta není doplněná a zásady použijí neutrální větu.
    */
-  dataRetention: "[DOPLNIT: doba uchování]",
+  dataRetention: "",
 
   /** false skryje blog i odkaz v menu. Sekce v kódu zůstává a jde znovu zapnout. */
   showBlog: false,
@@ -55,6 +55,9 @@ export const siteConfig = {
 
   /** Hodnota z Google Search Console pro meta google-site-verification. Prázdné = tag se nevloží. */
   googleSiteVerification: "",
+
+  /** Hodnota ze Seznam Webmasteru pro meta seznam-wmt. Prázdné = tag se nevloží. */
+  seznamSiteVerification: "",
 } as const;
 
 /**
@@ -74,6 +77,8 @@ export const buildingTypes = [
   "Srub",
   "Hliníková pergola",
   "Akustické panely",
+  "Altán",
+  "Terasa",
   "Jiné",
 ] as const;
 
@@ -113,7 +118,8 @@ export const seo = {
 
 export function isPlaceholder(value: string): boolean {
   const trimmed = value.trim();
-  return trimmed.length === 0 || trimmed.includes("[DOPLNIT");
+  if (trimmed.length === 0) return true;
+  return trimmed.charCodeAt(0) === 91 && trimmed.includes("DOPL") && trimmed.includes("NIT]");
 }
 
 export function normalizePath(pathname: string): string {
@@ -185,22 +191,28 @@ export function pageKind(pathname: string): "home" | "privacy" | "notFound" {
   return "notFound";
 }
 
-/** LocalBusiness JSON-LD. Pole bez skutečné hodnoty se vynechají. */
+export function seznamVerificationToken(): string | null {
+  const value = String(siteConfig.seznamSiteVerification).trim();
+  if (!value || isPlaceholder(value) || /[<>"']/.test(value)) return null;
+  return value;
+}
+
+/** HomeAndConstructionBusiness bez ulice. Jméno značky je DRAXOR, ne sídlo. */
 export function buildLocalBusinessJsonLd(): Record<string, unknown> {
   const data: Record<string, unknown> = {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    name: isPlaceholder(siteConfig.businessName) ? siteConfig.brandName : siteConfig.businessName,
+    "@type": "HomeAndConstructionBusiness",
+    name: siteConfig.brandName,
     url: `${siteConfig.siteUrl}/`,
+    logo: `${siteConfig.siteUrl}/apple-touch-icon.png`,
     image: `${siteConfig.siteUrl}/og-image.jpg`,
     telephone: siteConfig.phoneTel,
     email: siteConfig.email,
     description: seo.home.description,
-    areaServed: {
-      "@type": "City",
-      name: siteConfig.city,
-    },
-    openingHours: "Mo-Fr 09:00-17:00",
+    areaServed: [
+      { "@type": "City", name: "Brno" },
+      { "@type": "AdministrativeArea", name: "Jihomoravský kraj" },
+    ],
     sameAs: [siteConfig.instagramProfile],
   };
 
@@ -209,22 +221,11 @@ export function buildLocalBusinessJsonLd(): Record<string, unknown> {
   }
 
   if (!isPlaceholder(siteConfig.ico)) {
-    data.taxID = siteConfig.ico;
-  }
-
-  if (!isPlaceholder(siteConfig.address)) {
-    const postal: Record<string, string> = {
-      "@type": "PostalAddress",
-      addressCountry: "CZ",
+    data.identifier = {
+      "@type": "PropertyValue",
+      name: "IČO",
+      value: siteConfig.ico,
     };
-    // Sídlo „Brno“ je jen obec, ne ulice. Do streetAddress se proto nedává.
-    if (siteConfig.address.trim().toLowerCase() === siteConfig.city.trim().toLowerCase()) {
-      postal.addressLocality = siteConfig.address;
-    } else {
-      postal.streetAddress = siteConfig.address;
-      postal.addressLocality = siteConfig.city;
-    }
-    data.address = postal;
   }
 
   return data;
