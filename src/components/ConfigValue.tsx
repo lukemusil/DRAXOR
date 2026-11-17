@@ -1,6 +1,6 @@
 import { isPlaceholder } from "../site.config";
 
-/** Zvýrazní zástupný text [DOPLNIT: …], aby ho šlo na webu hned poznat. */
+/** Zvýrazní nevyplněný údaj, aby ho šlo na webu hned poznat. */
 export function ConfigValue({ value }: { value: string }) {
   if (!isPlaceholder(value)) {
     return <>{value}</>;

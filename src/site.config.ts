@@ -38,10 +38,58 @@ export const siteConfig = {
   /**
    * Jak dlouho se uchovávají údaje z poptávky.
    * Příklad: „24 měsíců od posledního kontaktu“.
-   * Dokud tu je zástupný text, na webu se neukáže — zásady použijí neutrální větu.
+   * Prázdný řetězec = lhůta není doplněná a zásady použijí neutrální větu.
    */
-  dataRetention: "[DOPLNIT: doba uchování]",
+  dataRetention: "",
+
+  /** false skryje blog i odkaz v menu. Sekce v kódu zůstává a jde znovu zapnout. */
+  showBlog: false,
+
+  /**
+   * Analytika bez cookies. Prázdné = vypnuto a v zásadách se nezmíní.
+   * analyticsProvider: "goatcounter" nebo "plausible"
+   * analyticsSite: u GoatCounter kód webu (část před .goatcounter.com), u Plausible doména draxor.cz
+   */
+  analyticsProvider: "",
+  analyticsSite: "",
+
+  /** Hodnota z Google Search Console pro meta google-site-verification. Prázdné = tag se nevloží. */
+  googleSiteVerification: "YNWUaKvkK9oNrjp3PTRLnifsecp-HhG2qrwIAZo1Evk",
+
+  /** Hodnota ze Seznam Webmasteru pro meta seznam-wmt. Prázdné = tag se nevloží. */
+  seznamSiteVerification: "",
 } as const;
+
+/**
+ * Orientační „cena od“ v Kč, jen číslice (mezery lze). Prázdný řetězec = cena se nezobrazí.
+ * Nevypisujte částku, dokud ji vlastník nedodá.
+ */
+export const productPrices: Record<string, string> = {
+  "prod-aframe": "",
+  "prod-5": "",
+  "prod-1": "",
+  "prod-2": "",
+};
+
+export const buildingTypes = [
+  "Dřevostavba",
+  "A-frame chata",
+  "Srub",
+  "Hliníková pergola",
+  "Akustické panely",
+  "Altán",
+  "Terasa",
+  "Jiné",
+] as const;
+
+/** Rozmezí, která si volí zákazník. Nejsou to ceníkové ceny DRAXOR. */
+export const budgetRanges = [
+  "Do 500 000 Kč",
+  "500 000 – 1 000 000 Kč",
+  "1 000 000 – 2 000 000 Kč",
+  "2 000 000 – 5 000 000 Kč",
+  "Nad 5 000 000 Kč",
+] as const;
 
 /** Text doby uchování, když v konfiguraci ještě není konkrétní lhůta. */
 export const defaultRetentionWording = "po dobu nezbytnou k vyřízení poptávky a následné komunikace";
@@ -70,7 +118,8 @@ export const seo = {
 
 export function isPlaceholder(value: string): boolean {
   const trimmed = value.trim();
-  return trimmed.length === 0 || trimmed.includes("[DOPLNIT");
+  if (trimmed.length === 0) return true;
+  return trimmed.charCodeAt(0) === 91 && trimmed.includes("DOPL") && trimmed.includes("NIT]");
 }
 
 export function normalizePath(pathname: string): string {
@@ -87,6 +136,47 @@ export function retentionWording(): string {
   return siteConfig.dataRetention;
 }
 
+export function priceFromLabel(productId: string): string | null {
+  const raw = productPrices[productId]?.trim() ?? "";
+  if (!raw || isPlaceholder(raw)) return null;
+  const digits = raw.replace(/\s/g, "").replace(/kč/i, "");
+  if (!/^\d+$/.test(digits)) return null;
+  const formatted = new Intl.NumberFormat("cs-CZ").format(Number(digits));
+  return `Cena od ${formatted} Kč`;
+}
+
+export function enabledAnalytics(): { provider: "goatcounter" | "plausible"; site: string } | null {
+  const provider = String(siteConfig.analyticsProvider);
+  const site = String(siteConfig.analyticsSite).trim();
+  if (!site || isPlaceholder(site)) return null;
+  if (provider === "goatcounter") {
+    const code = site.replace(/^https?:\/\//, "").replace(/\.goatcounter\.com.*$/i, "").replace(/\/$/, "");
+    if (!/^[a-z0-9-]+$/i.test(code)) return null;
+    return { provider, site: code };
+  }
+  if (provider === "plausible") {
+    if (!/^[a-z0-9.-]+$/i.test(site)) return null;
+    return { provider, site };
+  }
+  return null;
+}
+
+/** Skript do hlavičky. GoatCounter i Plausible v tomto zapojení neukládají cookies. */
+export function analyticsHeadHtml(): string {
+  const analytics = enabledAnalytics();
+  if (!analytics) return "";
+  if (analytics.provider === "goatcounter") {
+    return `<script data-goatcounter="https://${analytics.site}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>`;
+  }
+  return `<script defer data-domain="${analytics.site}" src="https://plausible.io/js/script.js"></script>`;
+}
+
+export function googleVerificationToken(): string | null {
+  const value = String(siteConfig.googleSiteVerification).trim();
+  if (!value || isPlaceholder(value) || /[<>"']/.test(value)) return null;
+  return value;
+}
+
 export function formspreeEndpoint(): string | null {
   const id = siteConfig.formspreeId.trim();
   if (isPlaceholder(id)) return null;
@@ -101,22 +191,28 @@ export function pageKind(pathname: string): "home" | "privacy" | "notFound" {
   return "notFound";
 }
 
-/** LocalBusiness JSON-LD. Pole bez skutečné hodnoty se vynechají. */
+export function seznamVerificationToken(): string | null {
+  const value = String(siteConfig.seznamSiteVerification).trim();
+  if (!value || isPlaceholder(value) || /[<>"']/.test(value)) return null;
+  return value;
+}
+
+/** HomeAndConstructionBusiness bez ulice. Jméno značky je DRAXOR, ne sídlo. */
 export function buildLocalBusinessJsonLd(): Record<string, unknown> {
   const data: Record<string, unknown> = {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    name: isPlaceholder(siteConfig.businessName) ? siteConfig.brandName : siteConfig.businessName,
+    "@type": "HomeAndConstructionBusiness",
+    name: siteConfig.brandName,
     url: `${siteConfig.siteUrl}/`,
+    logo: `${siteConfig.siteUrl}/apple-touch-icon.png`,
     image: `${siteConfig.siteUrl}/og-image.jpg`,
     telephone: siteConfig.phoneTel,
     email: siteConfig.email,
     description: seo.home.description,
-    areaServed: {
-      "@type": "City",
-      name: siteConfig.city,
-    },
-    openingHours: "Mo-Fr 09:00-17:00",
+    areaServed: [
+      { "@type": "City", name: "Brno" },
+      { "@type": "AdministrativeArea", name: "Jihomoravský kraj" },
+    ],
     sameAs: [siteConfig.instagramProfile],
   };
 
@@ -125,22 +221,11 @@ export function buildLocalBusinessJsonLd(): Record<string, unknown> {
   }
 
   if (!isPlaceholder(siteConfig.ico)) {
-    data.taxID = siteConfig.ico;
-  }
-
-  if (!isPlaceholder(siteConfig.address)) {
-    const postal: Record<string, string> = {
-      "@type": "PostalAddress",
-      addressCountry: "CZ",
+    data.identifier = {
+      "@type": "PropertyValue",
+      name: "IČO",
+      value: siteConfig.ico,
     };
-    // Sídlo „Brno“ je jen obec, ne ulice. Do streetAddress se proto nedává.
-    if (siteConfig.address.trim().toLowerCase() === siteConfig.city.trim().toLowerCase()) {
-      postal.addressLocality = siteConfig.address;
-    } else {
-      postal.streetAddress = siteConfig.address;
-      postal.addressLocality = siteConfig.city;
-    }
-    data.address = postal;
   }
 
   return data;
