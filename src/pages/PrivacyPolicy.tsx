@@ -1,5 +1,5 @@
 import { ConfigValue } from "../components/ConfigValue";
-import { isPlaceholder, retentionWording, routes, siteConfig } from "../site.config";
+import { enabledAnalytics, isPlaceholder, retentionWording, routes, siteConfig } from "../site.config";
 
 export function PrivacyPolicy() {
   return (
@@ -63,6 +63,9 @@ export function PrivacyPolicy() {
               <li>jméno a příjmení,</li>
               <li>e-mail,</li>
               <li>telefon, pokud ho uvedete,</li>
+              <li>typ stavby,</li>
+              <li>lokalita stavby,</li>
+              <li>orientační rozpočet, pokud ho uvedete,</li>
               <li>text zprávy o projektu.</li>
             </ul>
             <p>
@@ -112,8 +115,9 @@ export function PrivacyPolicy() {
             <div className="space-y-2">
               <h3 className="text-lg font-bold text-[#fbf8f5]">Formulář (Formspree)</h3>
               <p>
-                Jméno, e-mail, telefon a text zprávy z poptávkového formuláře odesílá prohlížeč službě Formspree
-                (formspree.io). Formspree je zpracovatelem těchto údajů a zprávu doručí správci na{" "}
+                Jméno, e-mail, telefon, typ stavby, lokalitu, orientační rozpočet a text zprávy z poptávkového
+                formuláře odesílá prohlížeč službě Formspree (formspree.io). Formspree je zpracovatelem těchto údajů a
+                zprávu doručí správci na{" "}
                 <a className="text-[#d8a876] underline underline-offset-4" href={`mailto:${siteConfig.email}`}>
                   {siteConfig.email}
                 </a>
@@ -175,6 +179,19 @@ export function PrivacyPolicy() {
               .
             </p>
           </section>
+
+          {enabledAnalytics() && (
+            <section className="space-y-3">
+              <h2 className="text-2xl font-bold font-headline uppercase tracking-tight text-[#fbf8f5]">
+                Návštěvnost webu
+              </h2>
+              <p>
+                Návštěvnost měříme službou {enabledAnalytics()?.provider === "goatcounter" ? "GoatCounter" : "Plausible"}{" "}
+                bez cookies a bez reklamního profilování. Služba dostane technické údaje o zobrazení stránky, například
+                zkrácenou adresu a obecný typ prohlížeče.
+              </p>
+            </section>
+          )}
 
           <section className="space-y-3">
             <h2 className="text-2xl font-bold font-headline uppercase tracking-tight text-[#fbf8f5]">Cookies</h2>
