@@ -70,9 +70,12 @@ const privacy = fs.readFileSync(path.join(root, "dist/ochrana-osobnich-udaju/ind
 const required = [
   ["úvod", home, "Tvoříme vaši vizi"],
   ["úvod", home, "Zásady ochrany osobních údajů"],
-  ["úvod", home, "[DOPLNIT: obchodní jméno]"],
+  ["úvod", home, "Lukáš Musil"],
+  ["úvod", home, "13999508"],
   ["úvod", home, "application/ld+json"],
   ["zásady", privacy, "Zásady ochrany osobních údajů"],
+  ["zásady", privacy, "Lukáš Musil"],
+  ["zásady", privacy, "po dobu nezbytnou k vyřízení poptávky a následné komunikace"],
   ["zásady", privacy, "Formspree"],
 ];
 
@@ -85,6 +88,31 @@ for (const [label, html, needle] of required) {
 
 if (home.includes("Poptávka byla úspěšně odeslána")) {
   console.error("Úvodní HTML nesmí před odesláním hlásit úspěch formuláře.");
+  process.exit(1);
+}
+
+for (const [label, html] of [
+  ["úvod", home],
+  ["zásady", privacy],
+]) {
+  if (html.includes("[DOPLNIT")) {
+    console.error(`V prerenderu „${label}“ je vidět zástupný text [DOPLNIT].`);
+    process.exit(1);
+  }
+}
+
+const jsonLdMatch = home.match(/<script type="application\/ld\+json">(.*?)<\/script>/);
+if (!jsonLdMatch) {
+  console.error("V úvodu chybí JSON-LD.");
+  process.exit(1);
+}
+const jsonLd = JSON.parse(jsonLdMatch[1]);
+if (jsonLd.name !== "Lukáš Musil" || jsonLd.legalName !== "Lukáš Musil" || jsonLd.taxID !== "13999508") {
+  console.error("JSON-LD neobsahuje obchodní jméno nebo IČO.");
+  process.exit(1);
+}
+if (jsonLd.address?.addressLocality !== "Brno" || jsonLd.address?.streetAddress) {
+  console.error("JSON-LD musí mít sídlo jen jako Brno, bez ulice.");
   process.exit(1);
 }
 
