@@ -8,9 +8,7 @@ import {
   Menu,
   X,
   ArrowRight,
-  Facebook,
   Instagram,
-  Twitter,
   Mail,
   MapPin,
   Phone,
@@ -20,22 +18,21 @@ import {
   Ruler,
   Clock,
   CheckCircle2,
+  CircleAlert,
   ShieldCheck,
   Download,
   ExternalLink,
 } from "lucide-react";
 import React, { useState, useEffect } from "react";
-import aluminumPergolaImg from "./assets/images/aluminum_pergola_1787994901750.jpg";
-import woodConstructionImg from "./assets/images/wood_construction_1787995128643.jpg";
-import timberCottageRoofImg from "./assets/images/timber_cottage_roof_1788273742830.jpg";
-import acousticWoodPanelsImg from "./assets/images/acoustic_wood_panels_1788273959651.jpg";
-import luxuryLogCabinImg from "./assets/images/luxury_log_cabin_1788273979540.jpg";
-import brushedWoodTextureImg from "./assets/images/brushed_wood_texture_1788273998324.jpg";
-import modernTimberHouseImg from "./assets/images/modern_timber_house_1788274013170.jpg";
-import aframeCabinHeroImg from "./assets/images/aframe_cabin_hero_1792270806419.jpg";
-import modernLuxurySrubImg from "./assets/images/modern_luxury_srub_1792271249521.jpg";
-import aframeCabin50m2Img from "./assets/images/aframe_cabin_50m2_1792420411215.jpg";
-import modernSrub50m2Img from "./assets/images/modern_srub_50m2_1792420411532.jpg";
+import { ConfigValue } from "./components/ConfigValue";
+import { ResponsiveImage, type ResponsiveAsset } from "./components/ResponsiveImage";
+import { images } from "./image-manifest";
+import { PrivacyPolicy } from "./pages/PrivacyPolicy";
+import { formspreeEndpoint, normalizePath, pageKind, routes, siteConfig } from "./site.config";
+
+function sectionHref(onHome: boolean, id: string) {
+  return onHome ? `#${id}` : `/#${id}`;
+}
 
 // --- Types ---
 interface Product {
@@ -43,26 +40,26 @@ interface Product {
   title: string;
   description: string;
   category: string;
-  image: string;
+  image: ResponsiveAsset;
   tag?: string;
 }
 
 interface Material {
   title: string;
   desc: string;
-  img: string;
+  img: ResponsiveAsset;
 }
 
 interface BlogPost {
   id: string;
   title: string;
   date: string;
-  image: string;
+  image: ResponsiveAsset;
   excerpt: string;
 }
 
 interface GalleryItem {
-  src: string;
+  image: ResponsiveAsset;
   title: string;
   category: string;
 }
@@ -91,7 +88,7 @@ const DraxorLogo = ({ className = "w-12 h-12" }: { className?: string }) => (
 );
 
 // --- Layout Components ---
-const Navbar = ({ onOpenLogoDownload }: { onOpenLogoDownload?: () => void }) => {
+const Navbar = ({ onOpenLogoDownload, onHome }: { onOpenLogoDownload?: () => void; onHome: boolean }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -137,7 +134,7 @@ const Navbar = ({ onOpenLogoDownload }: { onOpenLogoDownload?: () => void }) => 
           {navItems.map((item) => (
             <a
               key={item.id}
-              href={`#${item.id}`}
+              href={sectionHref(onHome, item.id)}
               className="text-[11px] uppercase tracking-widest font-bold text-[#b8aea2] hover:text-[#d8a876] transition-colors"
             >
               {item.name}
@@ -145,7 +142,7 @@ const Navbar = ({ onOpenLogoDownload }: { onOpenLogoDownload?: () => void }) => 
           ))}
 
           <a
-            href="https://www.instagram.com/draxor.cz/?__pwa=1"
+            href={siteConfig.instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
             title="Sledujte nás na Instagramu @draxor.cz"
@@ -156,7 +153,7 @@ const Navbar = ({ onOpenLogoDownload }: { onOpenLogoDownload?: () => void }) => 
           </a>
 
           <a
-            href="#poptavka"
+            href={sectionHref(onHome, "poptavka")}
             className="bg-[#c59b6d] text-[#120e0b] hover:bg-[#d8a876] px-6 py-2.5 rounded-full text-xs font-bold transition-all shadow-[#c59b6d]/15 shadow-lg uppercase tracking-wider flex items-center space-x-1.5"
           >
             <span>Poptat</span>
@@ -187,7 +184,7 @@ const Navbar = ({ onOpenLogoDownload }: { onOpenLogoDownload?: () => void }) => 
             {navItems.map((item) => (
               <a
                 key={item.id}
-                href={`#${item.id}`}
+                href={sectionHref(onHome, item.id)}
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-lg font-bold text-[#d6cec3] hover:text-[#d8a876] uppercase tracking-wider font-headline transition-colors"
               >
@@ -197,7 +194,7 @@ const Navbar = ({ onOpenLogoDownload }: { onOpenLogoDownload?: () => void }) => 
 
             <div className="pt-2">
               <a
-                href="#poptavka"
+                href={sectionHref(onHome, "poptavka")}
                 onClick={() => setMobileMenuOpen(false)}
                 className="block text-center bg-[#c59b6d] text-[#120e0b] py-3 rounded-xl font-bold uppercase tracking-wider text-xs"
               >
@@ -218,10 +215,11 @@ const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black text-[#f5f2ed] pt-20 pb-16">
       <motion.div style={{ y: y1 }} className="absolute inset-0 z-0">
-        <img
-          src={aframeCabinHeroImg}
-          alt="Hero Background - Designová A-frame chata v přírodě"
-          referrerPolicy="no-referrer"
+        <ResponsiveImage
+          image={images.hero}
+          alt="Designová A-frame chata v přírodě"
+          sizes="100vw"
+          priority
           className="w-full h-full object-cover opacity-50"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/45 to-black" />
@@ -237,7 +235,7 @@ const Hero = () => {
           <div className="inline-flex items-center space-x-2 bg-[#c59b6d]/15 backdrop-blur-md border border-[#c59b6d]/30 px-4 py-1.5 rounded-full mb-6">
             <ShieldCheck size={14} className="text-[#d8a876]" />
             <span className="text-xs uppercase tracking-[0.25em] font-semibold text-[#ecd7be]">
-              WOOD AND METAL CRAFT
+              {siteConfig.tagline}
             </span>
           </div>
 
@@ -272,7 +270,7 @@ const Hero = () => {
         transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none"
       >
-        <span className="text-[10px] uppercase tracking-widest text-[#b8aea2]/60 mb-2">Scroll</span>
+        <span className="text-[10px] uppercase tracking-widest text-[#b8aea2]/60 mb-2">Dolů</span>
         <div className="w-px h-10 bg-gradient-to-b from-[#c59b6d]/60 to-transparent" />
       </motion.div>
     </section>
@@ -306,6 +304,7 @@ const Features = () => {
   return (
     <section className="py-20 bg-black text-[#f5f2ed] border-y border-[#1f1914]">
       <div className="container mx-auto px-6">
+        <h2 className="sr-only">Naše přednosti</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
           {features.map((f, i) => (
             <motion.div
@@ -335,31 +334,31 @@ const FeaturedProducts = () => {
       id: "prod-aframe",
       title: "Designová A-frame chata Alpin",
       description: "Ikonická architektura na kompaktní ploše ~50 m². Štítové prosklení, obytné podkroví, masivní dřevěné trámy a terasa pro moderní glamping či rekreaci.",
-      category: "Dřevo",
-      image: aframeCabin50m2Img,
+      category: "Stavby",
+      image: images.aframe,
       tag: "50 m²",
     },
     {
       id: "prod-5",
       title: "Moderní srubový dům Harmonie",
       description: "Kompaktní luxusní srub o výměře ~50 m² z poctivé severské kulatiny s panoramatickým prosklením, krbem a krytou vyhlídkovou terasou.",
-      category: "Dřevo",
-      image: modernSrub50m2Img,
+      category: "Stavby",
+      image: images.srub,
       tag: "50 m²",
     },
     {
       id: "prod-1",
       title: "Moderní dřevostavba na míru",
       description: "Zakázková nízkoenergetická dřevostavba s precizní falcovanou střechou, modřínovou fasádou a velkoformátovým prosklením.",
-      category: "Dřevo",
-      image: modernTimberHouseImg,
+      category: "Stavby",
+      image: images.timberHouse,
     },
     {
       id: "prod-2",
       title: "Dubové akustické panely",
       description: "Zlepšete akustiku a estetiku svého interiéru s prémiovými lamelovými panely na akustickém filcu.",
       category: "Interiér",
-      image: acousticWoodPanelsImg,
+      image: images.acoustic,
       tag: "Design",
     },
   ];
@@ -390,6 +389,7 @@ const FeaturedProducts = () => {
           <div className="flex items-center space-x-3">
             <button
               onClick={() => setSelectedCategory("all")}
+              aria-pressed={selectedCategory === "all"}
               className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
                 selectedCategory === "all"
                   ? "bg-[#c59b6d] text-[#120e0b]"
@@ -399,9 +399,10 @@ const FeaturedProducts = () => {
               Vše
             </button>
             <button
-              onClick={() => setSelectedCategory("Dřevo")}
+              onClick={() => setSelectedCategory("Stavby")}
+              aria-pressed={selectedCategory === "Stavby"}
               className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
-                selectedCategory === "Dřevo"
+                selectedCategory === "Stavby"
                   ? "bg-[#c59b6d] text-[#120e0b]"
                   : "bg-[#121212] text-[#b8aea2] hover:text-[#f5f2ed] border border-[#261d14]"
               }`}
@@ -410,6 +411,7 @@ const FeaturedProducts = () => {
             </button>
             <button
               onClick={() => setSelectedCategory("Interiér")}
+              aria-pressed={selectedCategory === "Interiér"}
               className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all ${
                 selectedCategory === "Interiér"
                   ? "bg-[#c59b6d] text-[#120e0b]"
@@ -432,14 +434,11 @@ const FeaturedProducts = () => {
               className="group flex flex-col"
             >
               <div className="relative aspect-[4/5] overflow-hidden rounded-3xl mb-6 bg-[#0c0c0c] border border-[#221c16] group-hover:border-[#c59b6d]/40 transition-colors shadow-2xl">
-                <img
-                  src={product.image}
+                <ResponsiveImage
+                  image={product.image}
                   alt={product.title}
-                  referrerPolicy="no-referrer"
+                  sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  onError={(e) => {
-                    e.currentTarget.src = "https://images.unsplash.com/photo-1542621334-a254cf47733d?auto=format&fit=crop&q=80&w=800";
-                  }}
                 />
                 <div className="absolute top-5 left-5 flex space-x-2">
                   <span className="bg-black/85 backdrop-blur-md px-3.5 py-1.5 rounded-full text-[10px] uppercase font-bold tracking-widest border border-[#c59b6d]/30 text-[#ecd7be]">
@@ -478,17 +477,17 @@ const MaterialsSection = () => {
     {
       title: "Severské dřevo & Krovy",
       desc: "Využíváme borovici, modřín a severský smrk z certifikovaných udržitelných zdrojů. Ideální volba pro sruby, roubenky a nosné tesařské konstrukce.",
-      img: woodConstructionImg,
+      img: images.wood,
     },
     {
       title: "Hliník & Kovové střechy",
       desc: "Moderní bioklimatické pergoly, falcované plechové krytiny a nosné ocelové prvky. Maximální odolnost vůči počasí s nulovou údržbou.",
-      img: aluminumPergolaImg,
+      img: images.pergola,
     },
     {
       title: "Kartáčované povrchy",
       desc: "Speciální úprava fasádních palubek a trámů pro zvýraznění přirozené 3D textury a hloubky kresby dřeva s přírodními oleji.",
-      img: brushedWoodTextureImg,
+      img: images.brushed,
     },
   ];
 
@@ -518,9 +517,10 @@ const MaterialsSection = () => {
               className="group bg-[#0c0c0c] p-6 rounded-3xl border border-[#221c16] hover:border-[#c59b6d]/40 transition-all shadow-md"
             >
               <div className="aspect-[16/10] overflow-hidden rounded-2xl mb-6 border border-[#261d14] shadow-2xl bg-black">
-                <img
-                  src={mat.img}
+                <ResponsiveImage
+                  image={mat.img}
                   alt={mat.title}
+                  sizes="(min-width: 768px) 33vw, 100vw"
                   className="w-full h-full object-cover grayscale-[0.2] transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105"
                 />
               </div>
@@ -539,34 +539,34 @@ const MaterialsSection = () => {
 const GallerySection = () => {
   const [activeImage, setActiveImage] = useState<GalleryItem | null>(null);
 
-  const images: GalleryItem[] = [
+  const gallery: GalleryItem[] = [
     {
-      src: aframeCabin50m2Img,
+      image: images.aframe,
       title: "Designová A-frame chata Alpin (50 m²)",
       category: "A-Frame & Chaty",
     },
     {
-      src: modernSrub50m2Img,
+      image: images.srub,
       title: "Moderní srubový dům Harmonie (50 m²)",
       category: "Sruby",
     },
     {
-      src: modernTimberHouseImg,
+      image: images.timberHouse,
       title: "Moderní dřevostavba s falcovanou střechou",
       category: "Dřevostavby",
     },
     {
-      src: aluminumPergolaImg,
+      image: images.pergola,
       title: "Bioklimatická pergola a stínění",
       category: "Pergoly & Kov",
     },
     {
-      src: timberCottageRoofImg,
+      image: images.roof,
       title: "Stavba dřevostavby a tesařský krov",
       category: "Krovy & Střechy",
     },
     {
-      src: acousticWoodPanelsImg,
+      image: images.acoustic,
       title: "Dubové akustické lamelové panely",
       category: "Interiéry",
     },
@@ -588,26 +588,27 @@ const GallerySection = () => {
 
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {images.map((img, i) => (
-            <motion.div
+          {gallery.map((img, i) => (
+            <motion.button
+              type="button"
               key={i}
               whileHover={{ y: -4 }}
               onClick={() => setActiveImage(img)}
-              className="relative aspect-[4/3] overflow-hidden rounded-2xl group cursor-pointer border border-[#221c16] hover:border-[#c59b6d]/50 bg-[#0c0c0c] transition-colors"
+              className="relative aspect-[4/3] overflow-hidden rounded-2xl group cursor-pointer border border-[#221c16] hover:border-[#c59b6d]/50 bg-[#0c0c0c] transition-colors text-left w-full"
             >
-              <img
-                src={img.src}
+              <ResponsiveImage
+                image={img.image}
                 alt={img.title}
-                referrerPolicy="no-referrer"
+                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-6">
+              <div className="gallery-caption absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent transition-opacity flex flex-col justify-end p-6">
                 <span className="text-[10px] uppercase tracking-widest text-[#d8a876] mb-1 font-semibold">
                   {img.category}
                 </span>
                 <span className="font-bold text-base text-[#f5f2ed]">{img.title}</span>
               </div>
-            </motion.div>
+            </motion.button>
           ))}
         </div>
       </div>
@@ -633,17 +634,18 @@ const GallerySection = () => {
               >
                 <X size={28} />
               </button>
-              <img
-                src={activeImage.src}
+              <ResponsiveImage
+                image={activeImage.image}
                 alt={activeImage.title}
-                referrerPolicy="no-referrer"
+                sizes="90vw"
+                pictureClassName="block max-w-full"
                 className="max-h-[75vh] w-auto object-contain rounded-2xl border border-[#261d14]"
               />
               <div className="mt-4 text-center">
                 <span className="text-xs uppercase tracking-widest text-[#d8a876] font-semibold">
                   {activeImage.category}
                 </span>
-                <h4 className="text-xl font-bold text-[#f5f2ed] mt-1">{activeImage.title}</h4>
+                <h3 className="text-xl font-bold text-[#f5f2ed] mt-1">{activeImage.title}</h3>
               </div>
             </div>
           </motion.div>
@@ -679,7 +681,7 @@ const InstagramFeed = () => {
 
           <div className="relative z-10 flex flex-col sm:flex-row items-center gap-4 shrink-0">
             <a
-              href="https://www.instagram.com/draxor.cz/?__pwa=1"
+              href={siteConfig.instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-gradient-to-r from-[#d8a876] to-[#c59b6d] hover:from-[#e0b483] hover:to-[#d0a475] text-[#120e0b] px-8 py-4 rounded-full text-sm font-bold uppercase tracking-wider flex items-center space-x-2.5 transition-all shadow-xl shadow-[#c59b6d]/20 hover:scale-105"
@@ -701,7 +703,7 @@ const BlogSection = () => {
       id: "blog-1",
       title: "Kouzlo kartáčovaného dřeva: Proč zvolit tento obklad?",
       date: "10. května 2024",
-      image: brushedWoodTextureImg,
+      image: images.brushed,
       excerpt:
         "Zvýrazněte duši dřeva ve svém interiéru či exteriéru. Kartáčované palubky nabízejí nezaměnitelnou 3D strukturu a vysokou odolnost.",
     },
@@ -709,7 +711,7 @@ const BlogSection = () => {
       id: "blog-2",
       title: "Vylepšete svůj prostor s akustickými dřevěnými obklady",
       date: "1. března 2024",
-      image: acousticWoodPanelsImg,
+      image: images.acoustic,
       excerpt:
         "Správná akustika je klíčem k domácí pohodě i soustředění v kanceláři. Zjistěte, jak lamelové dřevěné panely dokáží transformovat váš prostor.",
     },
@@ -740,14 +742,11 @@ const BlogSection = () => {
               className="group bg-[#0c0c0c] p-6 rounded-3xl border border-[#221c16] hover:border-[#c59b6d]/40 transition-all flex flex-col shadow-md"
             >
               <div className="aspect-video overflow-hidden rounded-2xl mb-6 relative bg-black">
-                <img
-                  src={post.image}
+                <ResponsiveImage
+                  image={post.image}
                   alt={post.title}
+                  sizes="(min-width: 768px) 45vw, 100vw"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  onError={(e) => {
-                    e.currentTarget.src =
-                      "https://images.unsplash.com/photo-1542621334-a254cf47733d?auto=format&fit=crop&q=80&w=800";
-                  }}
                 />
               </div>
               <span className="text-[10px] uppercase tracking-widest text-[#d8a876] mb-2 block font-semibold">
@@ -774,29 +773,54 @@ const BlogSection = () => {
   );
 };
 
+const fieldClass =
+  "w-full bg-[#121212] border border-[#221c16] rounded-xl p-4 text-sm text-[#f5f2ed] placeholder-[#8f8274] focus:outline-none focus:border-[#c59b6d] focus:bg-[#181818] transition-colors";
+
 const QuoteSection = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error" | "mailto">("idle");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email) return;
 
-    setIsSubmitting(true);
+    const endpoint = formspreeEndpoint();
+    const subject = `Poptávka DRAXOR – ${formData.name}`;
+    const body = `Jméno: ${formData.name}\nE-mail: ${formData.email}\nTelefon: ${formData.phone || "Neuvedeno"}\n\nZpráva k projektu:\n${formData.message}`;
 
-    const subject = `Poptávka Draxor – ${formData.name}`;
-    const body = `Jméno: ${formData.name}\nEmail: ${formData.email}\nTelefon: ${formData.phone || "Neuvedeno"}\n\nZpráva k projektu:\n${formData.message}`;
-
-    try {
-      window.open(`mailto:musillukas@icloud.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, "_blank");
-    } catch {
-      // safe fallback
+    if (!endpoint) {
+      window.location.href = `mailto:${siteConfig.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      setStatus("mailto");
+      return;
     }
 
-    setSubmitted(true);
-    setIsSubmitting(false);
-    setFormData({ name: "", email: "", phone: "", message: "" });
+    setStatus("submitting");
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+          _subject: subject,
+        }),
+      });
+
+      if (!response.ok) {
+        setStatus("error");
+        return;
+      }
+
+      setStatus("success");
+      setFormData({ name: "", email: "", phone: "", message: "" });
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
@@ -820,7 +844,7 @@ const QuoteSection = () => {
 
               <div className="space-y-3">
                 <a
-                  href="mailto:musillukas@icloud.com"
+                  href={`mailto:${siteConfig.email}`}
                   className="flex items-center space-x-4 p-4 rounded-xl border border-[#221c16] hover:border-[#c59b6d]/40 bg-[#121212] hover:bg-[#181818] transition-colors group cursor-pointer"
                 >
                   <div className="w-10 h-10 rounded-lg bg-[#1c1611] flex items-center justify-center text-[#d8a876] group-hover:text-white transition-colors">
@@ -830,11 +854,11 @@ const QuoteSection = () => {
                     <span className="text-[10px] uppercase tracking-widest text-[#8f8274] block font-semibold">
                       Napište nám
                     </span>
-                    <span className="text-sm font-medium text-[#f5f2ed]">musillukas@icloud.com</span>
+                    <span className="text-sm font-medium text-[#f5f2ed]">{siteConfig.email}</span>
                   </div>
                 </a>
                 <a
-                  href="tel:+420732527871"
+                  href={`tel:${siteConfig.phoneTel}`}
                   className="flex items-center space-x-4 p-4 rounded-xl border border-[#221c16] hover:border-[#c59b6d]/40 bg-[#121212] hover:bg-[#181818] transition-colors group cursor-pointer"
                 >
                   <div className="w-10 h-10 rounded-lg bg-[#1c1611] flex items-center justify-center text-[#d8a876] group-hover:text-white transition-colors">
@@ -844,11 +868,11 @@ const QuoteSection = () => {
                     <span className="text-[10px] uppercase tracking-widest text-[#8f8274] block font-semibold">
                       Zavolejte nám
                     </span>
-                    <span className="text-sm font-medium text-[#f5f2ed]">+420 732 527 871</span>
+                    <span className="text-sm font-medium text-[#f5f2ed]">{siteConfig.phoneDisplay}</span>
                   </div>
                 </a>
                 <a
-                  href="https://www.instagram.com/draxor.cz/?__pwa=1"
+                  href={siteConfig.instagramUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center space-x-4 p-4 rounded-xl border border-[#221c16] hover:border-[#c59b6d]/40 bg-[#121212] hover:bg-[#181818] transition-colors group cursor-pointer"
@@ -860,27 +884,28 @@ const QuoteSection = () => {
                     <span className="text-[10px] uppercase tracking-widest text-[#8f8274] block font-semibold">
                       Instagram
                     </span>
-                    <span className="text-sm font-medium text-[#f5f2ed]">@draxor.cz</span>
+                    <span className="text-sm font-medium text-[#f5f2ed]">{siteConfig.instagramHandle}</span>
                   </div>
                 </a>
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {submitted ? (
+            <form onSubmit={handleSubmit} className="space-y-4" noValidate={false}>
+              {status === "success" ? (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
+                  role="status"
                   className="bg-[#121212] border border-[#c59b6d]/40 rounded-2xl p-8 text-center space-y-3"
                 >
                   <CheckCircle2 size={48} className="mx-auto text-[#d8a876]" />
-                  <h4 className="text-xl font-bold font-headline text-[#fbf8f5]">Poptávka byla úspěšně odeslána</h4>
+                  <h3 className="text-xl font-bold font-headline text-[#fbf8f5]">Poptávka byla úspěšně odeslána</h3>
                   <p className="text-[#b8aea2] text-sm leading-relaxed">
                     Děkujeme za váš zájem. Náš tým se vám ozve do 24 hodin s kalkulací a možnostmi realizace.
                   </p>
                   <button
                     type="button"
-                    onClick={() => setSubmitted(false)}
+                    onClick={() => setStatus("idle")}
                     className="mt-4 inline-block text-xs font-bold uppercase tracking-wider text-[#d8a876] hover:text-[#f5f2ed] underline underline-offset-4"
                   >
                     Odeslat další poptávku
@@ -888,44 +913,123 @@ const QuoteSection = () => {
                 </motion.div>
               ) : (
                 <>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Vaše jméno a příjmení *"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full bg-[#121212] border border-[#221c16] rounded-xl p-4 text-sm text-[#f5f2ed] placeholder-[#8f8274] focus:outline-none focus:border-[#c59b6d] focus:bg-[#181818] transition-colors"
-                  />
-                  <input
-                    type="email"
-                    required
-                    placeholder="Váš e-mail *"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full bg-[#121212] border border-[#221c16] rounded-xl p-4 text-sm text-[#f5f2ed] placeholder-[#8f8274] focus:outline-none focus:border-[#c59b6d] focus:bg-[#181818] transition-colors"
-                  />
-                  <input
-                    type="tel"
-                    placeholder="Telefon (volitelné)"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full bg-[#121212] border border-[#221c16] rounded-xl p-4 text-sm text-[#f5f2ed] placeholder-[#8f8274] focus:outline-none focus:border-[#c59b6d] focus:bg-[#181818] transition-colors"
-                  />
-                  <textarea
-                    placeholder="Popište stručně váš projekt nebo představu..."
-                    rows={4}
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full bg-[#121212] border border-[#221c16] rounded-xl p-4 text-sm text-[#f5f2ed] placeholder-[#8f8274] focus:outline-none focus:border-[#c59b6d] focus:bg-[#181818] transition-colors resize-none"
-                  />
+                  {status === "error" && (
+                    <div role="alert" className="bg-[#121212] border border-[#c59b6d]/40 rounded-xl p-4 text-sm text-[#ecd7be] space-y-2">
+                      <p className="flex items-start gap-2 font-semibold text-[#fbf8f5]">
+                        <CircleAlert size={18} className="mt-0.5 shrink-0 text-[#d8a876]" />
+                        Poptávku se nepodařilo odeslat.
+                      </p>
+                      <p className="text-[#b8aea2] leading-relaxed">
+                        Zkuste to prosím znovu, nebo napište na{" "}
+                        <a className="text-[#d8a876] underline underline-offset-4" href={`mailto:${siteConfig.email}`}>
+                          {siteConfig.email}
+                        </a>{" "}
+                        či zavolejte na{" "}
+                        <a className="text-[#d8a876] underline underline-offset-4" href={`tel:${siteConfig.phoneTel}`}>
+                          {siteConfig.phoneDisplay}
+                        </a>
+                        .
+                      </p>
+                    </div>
+                  )}
+                  {status === "mailto" && (
+                    <div role="status" className="bg-[#121212] border border-[#c59b6d]/40 rounded-xl p-4 text-sm space-y-2">
+                      <p className="flex items-start gap-2 font-semibold text-[#fbf8f5]">
+                        <Mail size={18} className="mt-0.5 shrink-0 text-[#d8a876]" />
+                        Zpráva se z webu neodeslala.
+                      </p>
+                      <p className="text-[#b8aea2] leading-relaxed">
+                        Otevřeli jsme e-mail ve vašem programu s předvyplněnou poptávkou. Je potřeba ji ještě ručně odeslat.
+                        Když se e-mail neotevře, napište na{" "}
+                        <a className="text-[#d8a876] underline underline-offset-4" href={`mailto:${siteConfig.email}`}>
+                          {siteConfig.email}
+                        </a>{" "}
+                        nebo zavolejte na{" "}
+                        <a className="text-[#d8a876] underline underline-offset-4" href={`tel:${siteConfig.phoneTel}`}>
+                          {siteConfig.phoneDisplay}
+                        </a>
+                        .
+                      </p>
+                    </div>
+                  )}
+                  <div>
+                    <label htmlFor="quote-name" className="sr-only">
+                      Jméno a příjmení
+                    </label>
+                    <input
+                      id="quote-name"
+                      name="name"
+                      type="text"
+                      required
+                      autoComplete="name"
+                      placeholder="Vaše jméno a příjmení *"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className={fieldClass}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="quote-email" className="sr-only">
+                      E-mail
+                    </label>
+                    <input
+                      id="quote-email"
+                      name="email"
+                      type="email"
+                      required
+                      autoComplete="email"
+                      placeholder="Váš e-mail *"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className={fieldClass}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="quote-phone" className="sr-only">
+                      Telefon
+                    </label>
+                    <input
+                      id="quote-phone"
+                      name="phone"
+                      type="tel"
+                      autoComplete="tel"
+                      placeholder="Telefon (volitelné)"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      className={fieldClass}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="quote-message" className="sr-only">
+                      Zpráva
+                    </label>
+                    <textarea
+                      id="quote-message"
+                      name="message"
+                      placeholder="Popište stručně váš projekt nebo představu..."
+                      rows={4}
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      className={`${fieldClass} resize-none`}
+                    />
+                  </div>
                   <button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={status === "submitting"}
+                    aria-busy={status === "submitting"}
                     className="w-full bg-[#c59b6d] text-[#120e0b] hover:bg-[#d8a876] disabled:opacity-50 py-4 rounded-xl font-bold text-sm uppercase tracking-widest transition-all flex items-center justify-center space-x-3 shadow-lg shadow-black/60 cursor-pointer"
                   >
-                    <span>Odeslat poptávku</span>
+                    <span>{status === "submitting" ? "Odesílám…" : "Odeslat poptávku"}</span>
                     <ArrowRight size={18} />
                   </button>
+                  <p className="text-[11px] leading-relaxed text-[#8f8274]">
+                    Odesláním berete na vědomí zpracování jména, e-mailu, telefonu a textu zprávy za účelem vyřízení
+                    poptávky. Více v{" "}
+                    <a href={routes.privacy} className="text-[#d8a876] underline underline-offset-4">
+                      Zásadách ochrany osobních údajů
+                    </a>
+                    .
+                  </p>
                 </>
               )}
             </form>
@@ -936,42 +1040,65 @@ const QuoteSection = () => {
   );
 };
 
-const MapSection = () => (
-  <section className="py-24 bg-black border-t border-[#1f1914]" id="kontakt">
-    <div className="container mx-auto px-6">
-      <div className="rounded-3xl overflow-hidden border border-[#221c16] shadow-2xl h-[520px] relative bg-black">
-        <iframe
-          className="w-full h-full grayscale invert opacity-70 contrast-125"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d83560.16483259941!2d16.5711625!3d49.20235335!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471294320875e46f%3A0x400af0f6614b280!2sBrno%2C%20Czechia!5e0!3m2!1sen!2scz!4v1689000000000"
-          style={{ border: 0 }}
-          allowFullScreen={false}
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          title="Draxor Location Brno"
-        />
-        <div className="absolute top-8 left-8 p-8 bg-black/92 backdrop-blur-xl border border-[#221c16] rounded-2xl max-w-sm text-[#f5f2ed] shadow-2xl">
-          <div className="flex items-center space-x-3.5 mb-4">
-            <DraxorLogo className="w-11 h-11" />
-            <h3 className="text-2xl font-black font-headline tracking-tight text-[#fbf8f5]">Navštivte nás</h3>
-          </div>
-          <p className="text-[#b8aea2] text-sm mb-6 leading-relaxed font-light">
-            Najdete nás v srdci jižní Moravy v Brně. Zastavte se na kávu a proberme váš projekt osobně s naším architektem.
-          </p>
-          <div className="space-y-3 text-sm">
-            <p className="flex items-center space-x-3 text-[#e6decb]">
-              <MapPin size={18} className="text-[#d8a876] flex-shrink-0" />
-              <span>Brno, Česká republika</span>
+const MapSection = () => {
+  const [mapReady, setMapReady] = useState(false);
+
+  return (
+    <section className="py-24 bg-black border-t border-[#1f1914]" id="kontakt">
+      <div className="container mx-auto px-6">
+        <div className="rounded-3xl overflow-hidden border border-[#221c16] shadow-2xl h-[520px] relative bg-black">
+          {mapReady ? (
+            <iframe
+              className="w-full h-full grayscale invert opacity-70 contrast-125"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d83560.16483259941!2d16.5711625!3d49.20235335!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471294320875e46f%3A0x400af0f6614b280!2sBrno%2C%20Czechia!5e0!3m2!1scs!2scz!4v1689000000000"
+              style={{ border: 0 }}
+              allowFullScreen={false}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Mapa: DRAXOR v Brně"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_40%,#2a2118,transparent_42%),linear-gradient(#12100e,#000)]">
+              <div className="absolute bottom-8 right-8 left-8 sm:left-auto sm:max-w-xs text-left sm:text-right space-y-3">
+                <p className="text-xs leading-relaxed text-[#b8aea2]">
+                  Mapa se načte ze služby Google až po kliknutí. Do té doby se Googlu z této stránky nic neposílá.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setMapReady(true)}
+                  className="bg-[#c59b6d] text-[#120e0b] hover:bg-[#d8a876] px-5 py-3 rounded-full text-xs font-bold uppercase tracking-wider"
+                >
+                  Zobrazit mapu
+                </button>
+              </div>
+            </div>
+          )}
+          <div className="absolute top-8 left-8 p-8 bg-black/92 backdrop-blur-xl border border-[#221c16] rounded-2xl max-w-sm text-[#f5f2ed] shadow-2xl">
+            <div className="flex items-center space-x-3.5 mb-4">
+              <DraxorLogo className="w-11 h-11" />
+              <h2 className="text-2xl font-black font-headline tracking-tight text-[#fbf8f5]">Navštivte nás</h2>
+            </div>
+            <p className="text-[#b8aea2] text-sm mb-6 leading-relaxed font-light">
+              Najdete nás v srdci jižní Moravy v Brně. Zastavte se na kávu a proberme váš projekt osobně s naším architektem.
             </p>
-            <p className="flex items-center space-x-3 text-[#e6decb]">
-              <Clock size={18} className="text-[#d8a876] flex-shrink-0" />
-              <span>Pondělí – Pátek: 9:00 – 17:00</span>
-            </p>
+            <div className="space-y-3 text-sm">
+              <p className="flex items-center space-x-3 text-[#e6decb]">
+                <MapPin size={18} className="text-[#d8a876] flex-shrink-0" />
+                <span>
+                  {siteConfig.city}, {siteConfig.country}
+                </span>
+              </p>
+              <p className="flex items-center space-x-3 text-[#e6decb]">
+                <Clock size={18} className="text-[#d8a876] flex-shrink-0" />
+                <span>{siteConfig.openingHours}</span>
+              </p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   if (!isOpen) return null;
@@ -1008,7 +1135,7 @@ const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
       ctx.fillText("DRAXOR", 400, 290);
       ctx.fillStyle = color;
       ctx.font = "600 32px 'Inter', sans-serif";
-      ctx.fillText("WOOD AND METAL CRAFT", 408, 370);
+      ctx.fillText("ŘEMESLO ZE DŘEVA A KOVU", 408, 370);
     } else {
       canvas.width = 1024;
       canvas.height = 1024;
@@ -1208,7 +1335,9 @@ const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
   );
 };
 
-const Footer = ({ onOpenLogoDownload }: { onOpenLogoDownload: () => void }) => (
+const footerHeading = "text-sm font-bold mb-6 font-headline uppercase tracking-widest text-[#d8a876]";
+
+const Footer = ({ onOpenLogoDownload, onHome }: { onOpenLogoDownload: () => void; onHome: boolean }) => (
   <footer className="bg-black text-[#f5f2ed] py-16 border-t border-[#1a140f]">
     <div className="container mx-auto px-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
@@ -1222,6 +1351,7 @@ const Footer = ({ onOpenLogoDownload }: { onOpenLogoDownload: () => void }) => (
           </p>
           <div className="pt-2 flex flex-wrap gap-2">
             <button
+              type="button"
               onClick={onOpenLogoDownload}
               className="inline-flex items-center space-x-2 bg-[#121212] hover:bg-[#1c1611] border border-[#c59b6d]/35 hover:border-[#c59b6d] px-3.5 py-2 rounded-xl text-xs font-bold text-[#d8a876] transition-all"
             >
@@ -1231,105 +1361,89 @@ const Footer = ({ onOpenLogoDownload }: { onOpenLogoDownload: () => void }) => (
           </div>
           <div className="flex space-x-4 pt-2">
             <a
-              href="#"
-              aria-label="Facebook"
-              className="w-9 h-9 rounded-full bg-[#121212] border border-[#221c16] flex items-center justify-center text-[#b8aea2] hover:text-[#d8a876] hover:border-[#c59b6d]/40 transition-colors"
-            >
-              <Facebook size={16} />
-            </a>
-            <a
-              href="https://www.instagram.com/draxor.cz/?__pwa=1"
+              href={siteConfig.instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Instagram Draxor @draxor.cz"
+              aria-label={`Instagram Draxor ${siteConfig.instagramHandle}`}
               className="w-9 h-9 rounded-full bg-[#121212] border border-[#221c16] flex items-center justify-center text-[#b8aea2] hover:text-[#d8a876] hover:border-[#c59b6d]/40 transition-colors"
             >
               <Instagram size={16} />
-            </a>
-            <a
-              href="#"
-              aria-label="Facebook"
-              className="w-9 h-9 rounded-full bg-[#121212] border border-[#221c16] flex items-center justify-center text-[#b8aea2] hover:text-[#d8a876] hover:border-[#c59b6d]/40 transition-colors"
-            >
-              <Facebook size={16} />
-            </a>
-            <a
-              href="#"
-              aria-label="Twitter"
-              className="w-9 h-9 rounded-full bg-[#121212] border border-[#221c16] flex items-center justify-center text-[#b8aea2] hover:text-[#d8a876] hover:border-[#c59b6d]/40 transition-colors"
-            >
-              <Twitter size={16} />
             </a>
           </div>
         </div>
 
         <div>
-          <h4 className="text-sm font-bold mb-6 font-headline uppercase tracking-widest text-[#d8a876]">Navigace</h4>
+          <h2 className={footerHeading}>Navigace</h2>
           <ul className="space-y-3 text-sm text-[#b8aea2] font-light">
             <li>
-              <a href="#produkty" className="hover:text-[#d8a876] transition-colors">
+              <a href={sectionHref(onHome, "produkty")} className="hover:text-[#d8a876] transition-colors">
                 Produkty
               </a>
             </li>
             <li>
-              <a href="#galerie" className="hover:text-[#d8a876] transition-colors">
+              <a href={sectionHref(onHome, "galerie")} className="hover:text-[#d8a876] transition-colors">
                 Galerie
               </a>
             </li>
             <li>
-              <a href="#materialy" className="hover:text-[#d8a876] transition-colors">
+              <a href={sectionHref(onHome, "materialy")} className="hover:text-[#d8a876] transition-colors">
                 Materiály
               </a>
             </li>
             <li>
               <a
-                href="https://www.instagram.com/draxor.cz/?__pwa=1"
+                href={siteConfig.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-[#d8a876] transition-colors inline-flex items-center space-x-1"
               >
-                <span>Instagram (@draxor.cz)</span>
+                <span>Instagram ({siteConfig.instagramHandle})</span>
                 <ExternalLink size={12} />
               </a>
             </li>
             <li>
-              <a href="#blog" className="hover:text-[#d8a876] transition-colors">
+              <a href={sectionHref(onHome, "blog")} className="hover:text-[#d8a876] transition-colors">
                 Blog & Tipy
               </a>
             </li>
             <li>
-              <a href="#poptavka" className="hover:text-[#d8a876] transition-colors">
+              <a href={sectionHref(onHome, "poptavka")} className="hover:text-[#d8a876] transition-colors">
                 Nezávazná poptávka
+              </a>
+            </li>
+            <li>
+              <a href={routes.privacy} className="hover:text-[#d8a876] transition-colors">
+                Ochrana osobních údajů
               </a>
             </li>
           </ul>
         </div>
 
         <div>
-          <h4 className="text-sm font-bold mb-6 font-headline uppercase tracking-widest text-[#d8a876]">Služby</h4>
+          <h2 className={footerHeading}>Služby</h2>
           <ul className="space-y-3 text-sm text-[#b8aea2] font-light">
             <li>
-              <a href="#produkty" className="hover:text-[#d8a876] transition-colors">
+              <a href={sectionHref(onHome, "produkty")} className="hover:text-[#d8a876] transition-colors">
                 Dřevostavby na klíč
               </a>
             </li>
             <li>
-              <a href="#produkty" className="hover:text-[#d8a876] transition-colors">
+              <a href={sectionHref(onHome, "produkty")} className="hover:text-[#d8a876] transition-colors">
                 Sruby a roubenky
               </a>
             </li>
             <li>
-              <a href="#materialy" className="hover:text-[#d8a876] transition-colors">
+              <a href={sectionHref(onHome, "materialy")} className="hover:text-[#d8a876] transition-colors">
                 Hliníkové bioklimatické pergoly
               </a>
             </li>
             <li>
-              <a href="#materialy" className="hover:text-[#d8a876] transition-colors">
+              <a href={sectionHref(onHome, "materialy")} className="hover:text-[#d8a876] transition-colors">
                 Kartáčované akustické panely
               </a>
             </li>
             <li>
-              <a href="#poptavka" className="hover:text-[#d8a876] transition-colors">
+              <a href={sectionHref(onHome, "poptavka")} className="hover:text-[#d8a876] transition-colors">
                 Architektonické 3D návrhy
               </a>
             </li>
@@ -1337,65 +1451,117 @@ const Footer = ({ onOpenLogoDownload }: { onOpenLogoDownload: () => void }) => (
         </div>
 
         <div>
-          <h4 className="text-sm font-bold mb-6 font-headline uppercase tracking-widest text-[#d8a876]">Kontakt</h4>
+          <h2 className={footerHeading}>Kontakt</h2>
           <ul className="space-y-3 text-sm text-[#b8aea2] font-light">
             <li className="flex items-center space-x-3">
               <MapPin size={16} className="text-[#d8a876]" />
-              <span>Brno, Česká republika</span>
+              <span>
+                {siteConfig.city}, {siteConfig.country}
+              </span>
             </li>
             <li className="flex items-center space-x-3">
               <Phone size={16} className="text-[#d8a876]" />
-              <a href="tel:+420732527871" className="hover:text-[#d8a876] transition-colors">
-                +420 732 527 871
+              <a href={`tel:${siteConfig.phoneTel}`} className="hover:text-[#d8a876] transition-colors">
+                {siteConfig.phoneDisplay}
               </a>
             </li>
             <li className="flex items-center space-x-3">
               <Mail size={16} className="text-[#d8a876]" />
-              <a href="mailto:musillukas@icloud.com" className="hover:text-[#d8a876] transition-colors">
-                musillukas@icloud.com
+              <a href={`mailto:${siteConfig.email}`} className="hover:text-[#d8a876] transition-colors">
+                {siteConfig.email}
               </a>
             </li>
             <li className="flex items-center space-x-3">
               <Instagram size={16} className="text-[#d8a876]" />
               <a
-                href="https://www.instagram.com/draxor.cz/?__pwa=1"
+                href={siteConfig.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-[#d8a876] transition-colors"
               >
-                @draxor.cz
+                {siteConfig.instagramHandle}
               </a>
             </li>
           </ul>
         </div>
       </div>
 
-      <div className="mt-16 pt-8 border-t border-[#1a140f] flex flex-col sm:flex-row justify-between items-center text-xs text-[#8f8274] gap-4">
-        <span>© {new Date().getFullYear()} DRAXOR.cz. Všechna práva vyhrazena.</span>
+      <div className="mt-16 pt-8 border-t border-[#1a140f] space-y-6">
+        <div className="space-y-2 text-sm text-[#b8aea2] font-light">
+          <h2 className={footerHeading}>Identifikace podnikatele</h2>
+          <p>
+            Obchodní jméno: <ConfigValue value={siteConfig.businessName} />
+          </p>
+          <p>
+            IČO: <ConfigValue value={siteConfig.ico} />
+          </p>
+          <p>
+            Sídlo: <ConfigValue value={siteConfig.address} />
+          </p>
+        </div>
+        <div className="flex flex-col sm:flex-row justify-between items-center text-xs text-[#8f8274] gap-4">
+          <span>© {new Date().getFullYear()} DRAXOR.cz. Všechna práva vyhrazena.</span>
+          <a href={routes.privacy} className="text-[#d8a876] underline underline-offset-4 hover:text-[#f5f2ed]">
+            Zásady ochrany osobních údajů
+          </a>
+        </div>
       </div>
     </div>
   </footer>
 );
 
-// --- Main App ---
-export default function App() {
+function NotFound() {
+  return (
+    <section className="min-h-[70vh] flex items-center px-6 pt-32 pb-24">
+      <div className="container mx-auto max-w-2xl text-center">
+        <h1 className="text-4xl md:text-6xl font-bold font-headline uppercase tracking-tight text-[#fbf8f5] mb-4">
+          Stránka nenalezena
+        </h1>
+        <p className="text-[#b8aea2] font-light mb-8">Tato adresa na webu DRAXOR neexistuje.</p>
+        <a
+          href={routes.home}
+          className="inline-flex bg-[#c59b6d] text-[#120e0b] hover:bg-[#d8a876] px-8 py-4 rounded-full text-sm font-bold uppercase tracking-wider"
+        >
+          Zpět na úvod
+        </a>
+      </div>
+    </section>
+  );
+}
+
+export default function App({ initialPath }: { initialPath?: string }) {
   const [logoModalOpen, setLogoModalOpen] = useState(false);
+  const path = normalizePath(initialPath ?? (typeof window !== "undefined" ? window.location.pathname : "/"));
+  const kind = pageKind(path);
+  const onHome = kind === "home";
+
+  useEffect(() => {
+    if (!onHome || typeof window === "undefined" || !window.location.hash) return;
+    const target = document.querySelector(window.location.hash);
+    if (target) target.scrollIntoView();
+  }, [onHome]);
 
   return (
     <div className="bg-black min-h-screen selection:bg-[#c59b6d] selection:text-[#120e0b] font-sans antialiased text-[#f5f2ed]">
-      <Navbar onOpenLogoDownload={() => setLogoModalOpen(true)} />
+      <Navbar onOpenLogoDownload={() => setLogoModalOpen(true)} onHome={onHome} />
       <main>
-        <Hero />
-        <Features />
-        <FeaturedProducts />
-        <MaterialsSection />
-        <GallerySection />
-        <InstagramFeed />
-        <BlogSection />
-        <QuoteSection />
-        <MapSection />
+        {kind === "home" && (
+          <>
+            <Hero />
+            <Features />
+            <FeaturedProducts />
+            <MaterialsSection />
+            <GallerySection />
+            <InstagramFeed />
+            <BlogSection />
+            <QuoteSection />
+            <MapSection />
+          </>
+        )}
+        {kind === "privacy" && <PrivacyPolicy />}
+        {kind === "notFound" && <NotFound />}
       </main>
-      <Footer onOpenLogoDownload={() => setLogoModalOpen(true)} />
+      <Footer onOpenLogoDownload={() => setLogoModalOpen(true)} onHome={onHome} />
       <LogoDownloadModal isOpen={logoModalOpen} onClose={() => setLogoModalOpen(false)} />
     </div>
   );
