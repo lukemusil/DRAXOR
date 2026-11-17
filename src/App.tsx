@@ -1724,7 +1724,7 @@ function MobileCallButton() {
   return (
     <a
       href={`tel:${siteConfig.phoneTel}`}
-      className={`${hide ? "hidden" : "md:hidden"} fixed bottom-4 right-4 z-40 inline-flex items-center gap-2 bg-[#c59b6d] text-[#120e0b] hover:bg-[#d8a876] px-5 py-3 rounded-full text-sm font-bold uppercase tracking-wider shadow-lg shadow-black/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f5eee6]`}
+      className={`${hide ? "hidden" : "inline-flex md:hidden"} fixed bottom-4 right-4 z-40 items-center gap-2 bg-[#c59b6d] text-[#120e0b] hover:bg-[#d8a876] px-5 py-3 rounded-full text-sm font-bold uppercase tracking-wider shadow-lg shadow-black/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f5eee6]`}
     >
       <Phone size={16} />
       Zavolat
