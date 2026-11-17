@@ -79,9 +79,8 @@ const required = [
   ["zásady", privacy, "Formspree je zpracovatelem"],
   ["úvod", home, "Loga ke stažení"],
   ["úvod", home, "Stáhnout celý balíček (ZIP)"],
-  ["úvod", home, "draxor-strecha-gold.svg"],
   ["úvod", home, "draxor-text-gold.svg"],
-  ["úvod", home, "draxor-ikona.png"],
+  ["úvod", home, "draxor-text-gold.png"],
 ];
 
 for (const [label, html, needle] of required) {
@@ -91,8 +90,17 @@ for (const [label, html, needle] of required) {
   }
 }
 
-if (home.includes("draxor-text-white") || home.includes("draxor-strecha-black") || home.includes("logo-svetle") || home.includes("logo-tmave")) {
-  console.error("Patička má odkazovat jen na zlatou stříšku, zlatý nápis a ikonu.");
+if (
+  home.includes("draxor-text-white") ||
+  home.includes("draxor-text-black") ||
+  home.includes("draxor-strecha") ||
+  home.includes("draxor-ikona") ||
+  home.includes("logo-zlate") ||
+  home.includes("logo-svetle") ||
+  home.includes("logo-tmave") ||
+  home.includes("logo-ikona")
+) {
+  console.error("Patička má nabízet jen zlatý nápis DRAXOR.");
   process.exit(1);
 }
 

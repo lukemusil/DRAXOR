@@ -1137,9 +1137,7 @@ const LogoDownloads = () => (
     <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div>
         <h2 className={footerHeading}>Loga ke stažení</h2>
-        <p className="max-w-xl text-xs leading-relaxed text-[#b8aea2]">
-          Stříška a nápis DRAXOR jsou oddělené soubory. zlatá #d8a876
-        </p>
+        <p className="max-w-xl text-xs leading-relaxed text-[#b8aea2]">Nápis DRAXOR. zlatá #d8a876</p>
       </div>
       <a
         href="/downloads/draxor-logo-balicek.zip"
@@ -1151,43 +1149,17 @@ const LogoDownloads = () => (
       </a>
     </div>
 
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-      <div>
-        <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-[#d8a876]">Stříška</h3>
-        <LogoVariant
-          label="Zlatá"
-          color="zlatá #d8a876"
-          src="/logo-zlate.svg"
-          frame="bg-[#121212]"
-          hrefBase="/logo-zlate"
-          downloadBase="draxor-strecha-gold"
-          previewClass="h-10 w-full object-contain"
-        />
-      </div>
-      <div>
-        <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-[#d8a876]">Nápis DRAXOR</h3>
-        <LogoVariant
-          label="Zlatá"
-          color="zlatá #d8a876"
-          src="/draxor-text-gold.svg"
-          frame="bg-[#121212]"
-          hrefBase="/draxor-text-gold"
-          downloadBase="draxor-text-gold"
-          previewClass="h-8 w-full object-contain"
-        />
-      </div>
-      <div>
-        <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-[#d8a876]">Ikona</h3>
-        <LogoVariant
-          label="Ikona"
-          color="zlatá #d8a876"
-          src="/logo-ikona.svg"
-          frame="bg-[#121212]"
-          hrefBase="/logo-ikona"
-          downloadBase="draxor-ikona"
-          previewClass="h-14 w-14 object-contain"
-        />
-      </div>
+    <div className="max-w-sm">
+      <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-[#d8a876]">Nápis DRAXOR</h3>
+      <LogoVariant
+        label="Zlatá"
+        color="zlatá #d8a876"
+        src="/draxor-text-gold.svg"
+        frame="bg-[#121212]"
+        hrefBase="/draxor-text-gold"
+        downloadBase="draxor-text-gold"
+        previewClass="h-8 w-full object-contain"
+      />
     </div>
   </section>
 );
