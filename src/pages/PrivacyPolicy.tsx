@@ -112,14 +112,12 @@ export function PrivacyPolicy() {
             <div className="space-y-2">
               <h3 className="text-lg font-bold text-[#fbf8f5]">Formulář (Formspree)</h3>
               <p>
-                Pokud je v konfiguraci webu vyplněné ID formuláře služby Formspree, prohlížeč odešle jméno, e-mail,
-                telefon a text zprávy na adresu formspree.io. Formspree zprávu doručí správci. Provozovatel této
-                služby je v postavení zpracovatele, případně samostatného příjemce, podle svých podmínek.
-              </p>
-              <p>
-                Dokud ID formuláře není vyplněné, web nic na Formspree neposílá. Tlačítko jen otevře e-mail ve
-                vašem poštovním programu a údaje se na server tohoto webu neukládají. Takové otevření e-mailu samo
-                o sobě není odesláním zprávy.
+                Jméno, e-mail, telefon a text zprávy z poptávkového formuláře odesílá prohlížeč službě Formspree
+                (formspree.io). Formspree je zpracovatelem těchto údajů a zprávu doručí správci na{" "}
+                <a className="text-[#d8a876] underline underline-offset-4" href={`mailto:${siteConfig.email}`}>
+                  {siteConfig.email}
+                </a>
+                .
               </p>
             </div>
 
@@ -182,8 +180,7 @@ export function PrivacyPolicy() {
             <h2 className="text-2xl font-bold font-headline uppercase tracking-tight text-[#fbf8f5]">Cookies</h2>
             <p>
               Samotný web DRAXOR neukládá analytické ani reklamní cookies. Cookies mohou vzniknout až po načtení
-              mapy Google, nebo na straně Formspree při odeslání formuláře, pokud je formulář na tuto službu
-              napojený.
+              mapy Google. Při odeslání formuláře je může uložit také Formspree, zpracovatel údajů z poptávky.
             </p>
           </section>
 

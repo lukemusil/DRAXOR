@@ -31,10 +31,9 @@ export const siteConfig = {
 
   /**
    * ID formuláře Formspree — část adresy za https://formspree.io/f/
-   * Příklad: u adresy https://formspree.io/f/abcdwxyz sem patří abcdwxyz.
-   * Dokud tu zůstane zástupný text, formulář jen otevře e-mail a nehlásí odeslání.
+   * Formulář mwloonzl doručuje zprávy na musillukas@icloud.com.
    */
-  formspreeId: "[DOPLNIT: Formspree ID]",
+  formspreeId: "mwloonzl",
 
   /**
    * Jak dlouho se uchovávají údaje z poptávky.
