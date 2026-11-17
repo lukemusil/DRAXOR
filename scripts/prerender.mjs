@@ -169,9 +169,15 @@ if (homeMeta.hasPrices) {
   process.exit(1);
 }
 
+const googleVerificationTag =
+  '<meta name="google-site-verification" content="YNWUaKvkK9oNrjp3PTRLnifsecp-HhG2qrwIAZo1Evk" />';
 if (homeMeta.googleVerification) {
-  if (!home.includes(`name="google-site-verification" content="${homeMeta.googleVerification}"`)) {
-    console.error("Chybí meta tag Google Search Console.");
+  if (!home.includes(googleVerificationTag)) {
+    console.error("Chybí přesný meta tag Google Search Console.");
+    process.exit(1);
+  }
+  if (home.includes("seznam-wmt")) {
+    console.error("Slot Seznamu má zůstat prázdný.");
     process.exit(1);
   }
 } else if (home.includes("google-site-verification")) {

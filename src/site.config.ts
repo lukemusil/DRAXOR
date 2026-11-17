@@ -54,7 +54,7 @@ export const siteConfig = {
   analyticsSite: "",
 
   /** Hodnota z Google Search Console pro meta google-site-verification. Prázdné = tag se nevloží. */
-  googleSiteVerification: "",
+  googleSiteVerification: "YNWUaKvkK9oNrjp3PTRLnifsecp-HhG2qrwIAZo1Evk",
 
   /** Hodnota ze Seznam Webmasteru pro meta seznam-wmt. Prázdné = tag se nevloží. */
   seznamSiteVerification: "",
