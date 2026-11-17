@@ -1,5 +1,5 @@
 import { ConfigValue } from "../components/ConfigValue";
-import { routes, siteConfig } from "../site.config";
+import { isPlaceholder, retentionWording, routes, siteConfig } from "../site.config";
 
 export function PrivacyPolicy() {
   return (
@@ -44,10 +44,14 @@ export function PrivacyPolicy() {
                 </a>
               </li>
             </ul>
-            <p className="text-[#8f8274] text-sm">
-              Položky v hranatých závorkách ještě nejsou doplněné. Až budou známé, nahradí se v souboru{" "}
-              <span className="text-[#ecd7be]">src/site.config.ts</span>.
-            </p>
+            {(isPlaceholder(siteConfig.businessName) ||
+              isPlaceholder(siteConfig.ico) ||
+              isPlaceholder(siteConfig.address)) && (
+              <p className="text-[#8f8274] text-sm">
+                Položky v hranatých závorkách ještě nejsou doplněné. Až budou známé, nahradí se v souboru{" "}
+                <span className="text-[#ecd7be]">src/site.config.ts</span>.
+              </p>
+            )}
           </section>
 
           <section className="space-y-3">
@@ -85,9 +89,18 @@ export function PrivacyPolicy() {
               Doba uchování
             </h2>
             <p>
-              Poptávku uchováváme po dobu potřebnou k jejímu vyřízení a k navazující komunikaci, nejdéle po dobu:{" "}
-              <ConfigValue value={siteConfig.dataRetention} />. Potom údaje smažeme, pokud delší uložení neukládá
-              právní předpis nebo pokud je nepotřebujeme k ochraně právních nároků.
+              {isPlaceholder(siteConfig.dataRetention) ? (
+                <>
+                  Poptávku uchováváme {retentionWording()}. Potom údaje smažeme, pokud delší uložení neukládá právní
+                  předpis nebo pokud je nepotřebujeme k ochraně právních nároků.
+                </>
+              ) : (
+                <>
+                  Poptávku uchováváme po dobu potřebnou k jejímu vyřízení a k navazující komunikaci, nejdéle po dobu:{" "}
+                  {siteConfig.dataRetention}. Potom údaje smažeme, pokud delší uložení neukládá právní předpis nebo
+                  pokud je nepotřebujeme k ochraně právních nároků.
+                </>
+              )}
             </p>
           </section>
 

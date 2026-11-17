@@ -20,14 +20,14 @@ export const siteConfig = {
   country: "Česká republika",
   openingHours: "Pondělí – Pátek: 9:00 – 17:00",
 
-  /** Obchodní jméno podnikatele (např. „Jan Novák“ nebo „DRAXOR s.r.o.“). */
-  businessName: "[DOPLNIT: obchodní jméno]",
+  /** Obchodní jméno podnikatele. */
+  businessName: "Lukáš Musil",
 
-  /** Identifikační číslo osoby, jen číslice. */
-  ico: "[DOPLNIT: IČO]",
+  /** Identifikační číslo osoby. */
+  ico: "13999508",
 
-  /** Zapsané sídlo včetně ulice, PSČ a obce. */
-  address: "[DOPLNIT: sídlo]",
+  /** Sídlo. Vlastník chce zveřejnit jen obec, bez ulice. */
+  address: "Brno",
 
   /**
    * ID formuláře Formspree — část adresy za https://formspree.io/f/
@@ -39,9 +39,13 @@ export const siteConfig = {
   /**
    * Jak dlouho se uchovávají údaje z poptávky.
    * Příklad: „24 měsíců od posledního kontaktu“.
+   * Dokud tu je zástupný text, na webu se neukáže — zásady použijí neutrální větu.
    */
   dataRetention: "[DOPLNIT: doba uchování]",
 } as const;
+
+/** Text doby uchování, když v konfiguraci ještě není konkrétní lhůta. */
+export const defaultRetentionWording = "po dobu nezbytnou k vyřízení poptávky a následné komunikace";
 
 export const routes = {
   home: "/",
@@ -76,6 +80,12 @@ export function normalizePath(pathname: string): string {
     return withoutQuery.slice(0, -1);
   }
   return withoutQuery || "/";
+}
+
+/** Konkrétní lhůta, nebo neutrální věta, pokud lhůta ještě není doplněná. */
+export function retentionWording(): string {
+  if (isPlaceholder(siteConfig.dataRetention)) return defaultRetentionWording;
+  return siteConfig.dataRetention;
 }
 
 export function formspreeEndpoint(): string | null {
@@ -120,12 +130,18 @@ export function buildLocalBusinessJsonLd(): Record<string, unknown> {
   }
 
   if (!isPlaceholder(siteConfig.address)) {
-    data.address = {
+    const postal: Record<string, string> = {
       "@type": "PostalAddress",
-      streetAddress: siteConfig.address,
-      addressLocality: siteConfig.city,
       addressCountry: "CZ",
     };
+    // Sídlo „Brno“ je jen obec, ne ulice. Do streetAddress se proto nedává.
+    if (siteConfig.address.trim().toLowerCase() === siteConfig.city.trim().toLowerCase()) {
+      postal.addressLocality = siteConfig.address;
+    } else {
+      postal.streetAddress = siteConfig.address;
+      postal.addressLocality = siteConfig.city;
+    }
+    data.address = postal;
   }
 
   return data;
