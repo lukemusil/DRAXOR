@@ -1,3 +1,4 @@
+@import "./fonts.css";
 @import "tailwindcss";
 
 @layer base {
@@ -17,6 +18,26 @@
 
   h1, h2, h3, h4, .font-headline {
     font-family: var(--font-headline);
+  }
+
+  section[id] {
+    scroll-margin-top: 6rem;
+  }
+}
+
+/* Popisky galerie jsou na dotykových zařízeních vidět hned, na myši až po najetí. */
+.gallery-caption {
+  opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .gallery-caption {
+    opacity: 0;
+  }
+
+  .group:hover .gallery-caption,
+  .group:focus-within .gallery-caption {
+    opacity: 1;
   }
 }
 

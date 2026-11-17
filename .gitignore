@@ -1,6 +1,8 @@
 node_modules/
 build/
 dist/
+dist-ssr/
+scripts/image-size-report.json
 coverage/
 .DS_Store
 *.log
