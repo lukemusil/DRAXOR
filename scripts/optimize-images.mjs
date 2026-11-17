@@ -87,7 +87,7 @@ await sharp(heroInput)
   .toFile(path.join(root, "public/og-image.jpg"));
 
 const iconSvg = fs.readFileSync(path.join(root, "public/favicon.svg"));
-await sharp(iconSvg).resize(180, 180).png().toFile(path.join(root, "public/apple-touch-icon.png"));
+await sharp(iconSvg).resize(1024, 1024).png().toFile(path.join(root, "public/apple-touch-icon.png"));
 
 const lines = [
   "/** Vygenerováno skriptem scripts/optimize-images.mjs. Neupravujte ručně. */",

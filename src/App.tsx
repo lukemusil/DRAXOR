@@ -65,26 +65,15 @@ interface GalleryItem {
 }
 
 // --- Logo Component ---
-const DraxorLogo = ({ className = "w-12 h-12" }: { className?: string }) => (
-  <div
-    className={`${className} relative flex items-center justify-center flex-shrink-0 transition-transform`}
+const DraxorLogo = ({ className = "h-9 w-auto" }: { className?: string }) => (
+  <svg
+    viewBox="0 18 202 112"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+    className={`${className} flex-shrink-0 drop-shadow-[0_2px_10px_rgba(216,168,118,0.25)]`}
   >
-    <svg
-      viewBox="0 0 100 100"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-full h-full drop-shadow-[0_2px_10px_rgba(216,168,118,0.25)]"
-    >
-      {/* Clean, Simple Minimalist Roof (Stříška) - No border or background framing */}
-      <path
-        d="M6 64 L50 24 L94 64"
-        stroke="#d8a876"
-        strokeWidth="11"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  </div>
+    <polygon points="12,118 72,30 190,118 172,118 72,52 30,118" fill="#d8a876" />
+  </svg>
 );
 
 // --- Layout Components ---
@@ -122,7 +111,7 @@ const Navbar = ({ onOpenLogoDownload, onHome }: { onOpenLogoDownload?: () => voi
             title="Klikněte pro stažení loga (SVG / PNG)"
             className="flex items-center space-x-3.5 group text-left focus:outline-none cursor-pointer"
           >
-            <DraxorLogo className="w-12 h-12 group-hover:scale-105 transition-transform" />
+            <DraxorLogo className="h-9 w-auto group-hover:scale-105 transition-transform" />
             <span className="text-3xl font-black tracking-tighter text-[#f5f2ed] font-headline group-hover:text-[#d8a876] transition-colors">
               DRAXOR
             </span>
@@ -1075,7 +1064,7 @@ const MapSection = () => {
           )}
           <div className="absolute top-8 left-8 p-8 bg-black/92 backdrop-blur-xl border border-[#221c16] rounded-2xl max-w-sm text-[#f5f2ed] shadow-2xl">
             <div className="flex items-center space-x-3.5 mb-4">
-              <DraxorLogo className="w-11 h-11" />
+              <DraxorLogo className="h-8 w-auto" />
               <h2 className="text-2xl font-black font-headline tracking-tight text-[#fbf8f5]">Navštivte nás</h2>
             </div>
             <p className="text-[#b8aea2] text-sm mb-6 leading-relaxed font-light">
@@ -1100,59 +1089,55 @@ const MapSection = () => {
   );
 };
 
+const logoDownloads = [
+  {
+    label: "Ikona",
+    note: "Tmavý podklad, zlatá značka",
+    preview: "/logo-ikona.svg",
+    svg: "/logo-ikona.svg",
+    png: "/logo-ikona.png",
+    file: "draxor-ikona",
+    frame: "bg-[#f5f2ed]",
+    previewClass: "h-24 w-24 object-contain",
+  },
+  {
+    label: "Tmavé",
+    note: "Pro světlé pozadí",
+    preview: "/logo-tmave.svg",
+    svg: "/logo-tmave.svg",
+    png: "/logo-tmave.png",
+    file: "draxor-znacka-tmava",
+    frame: "bg-[#f5f2ed]",
+    previewClass: "h-16 w-full object-contain",
+  },
+  {
+    label: "Zlaté",
+    note: "Pro tmavé pozadí",
+    preview: "/logo-zlate.svg",
+    svg: "/logo-zlate.svg",
+    png: "/logo-zlate.png",
+    file: "draxor-znacka-zlata",
+    frame: "bg-[#121212]",
+    previewClass: "h-16 w-full object-contain",
+  },
+  {
+    label: "Světlé",
+    note: "Pro tmavé pozadí",
+    preview: "/logo-svetle.svg",
+    svg: "/logo-svetle.svg",
+    png: "/logo-svetle.png",
+    file: "draxor-znacka-svetla",
+    frame: "bg-[#14100c]",
+    previewClass: "h-16 w-full object-contain",
+  },
+] as const;
+
 const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   if (!isOpen) return null;
 
   const downloadFile = (path: string, filename: string) => {
     const link = document.createElement("a");
     link.href = path;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const downloadPNG = (color: string, filename: string, isFull = false) => {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    if (isFull) {
-      canvas.width = 1600;
-      canvas.height = 480;
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 36;
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-      ctx.beginPath();
-      ctx.moveTo(60, 315);
-      ctx.lineTo(190, 165);
-      ctx.lineTo(320, 315);
-      ctx.stroke();
-
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "900 152px 'Outfit', sans-serif";
-      ctx.fillText("DRAXOR", 400, 290);
-      ctx.fillStyle = color;
-      ctx.font = "600 32px 'Inter', sans-serif";
-      ctx.fillText("ŘEMESLO ZE DŘEVA A KOVU", 408, 370);
-    } else {
-      canvas.width = 1024;
-      canvas.height = 1024;
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 92;
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-      ctx.beginPath();
-      ctx.moveTo(102, 665);
-      ctx.lineTo(512, 286);
-      ctx.lineTo(922, 665);
-      ctx.stroke();
-    }
-
-    const pngUrl = canvas.toDataURL("image/png");
-    const link = document.createElement("a");
-    link.href = pngUrl;
     link.download = filename;
     document.body.appendChild(link);
     link.click();
@@ -1169,12 +1154,12 @@ const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
         onClick={onClose}
       >
         <div
-          className="relative max-w-2xl w-full bg-[#0c0c0c] border border-[#221c16] rounded-3xl p-6 sm:p-8 text-[#f5f2ed] shadow-2xl space-y-6"
+          className="relative max-w-2xl w-full bg-[#0c0c0c] border border-[#221c16] rounded-3xl p-6 sm:p-8 text-[#f5f2ed] shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex justify-between items-center border-b border-[#221c16] pb-4">
             <div className="flex items-center space-x-3.5">
-              <DraxorLogo className="w-12 h-12" />
+              <DraxorLogo className="h-9 w-auto" />
               <div>
                 <h3 className="text-xl font-bold font-headline uppercase text-[#fbf8f5]">Stáhnout logo DRAXOR</h3>
                 <p className="text-xs text-[#b8aea2]">Vektorové formáty (SVG) a vysoké rozlišení (PNG)</p>
@@ -1190,144 +1175,36 @@ const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Gold Roof */}
-            <div className="bg-[#121212] p-5 rounded-2xl border border-[#221c16] flex flex-col items-center text-center">
-              <div className="w-28 h-28 flex items-center justify-center mb-3">
-                <svg viewBox="0 0 100 100" className="w-20 h-20">
-                  <path
-                    d="M6 64 L50 24 L94 64"
-                    stroke="#d8a876"
-                    strokeWidth="11"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    fill="none"
-                  />
-                </svg>
-              </div>
-              <span className="font-bold text-sm text-[#f5f2ed] mb-1">Zlatá stříška</span>
-              <span className="text-[11px] text-[#8f8274] mb-3">Základní verze značky</span>
-              <div className="flex space-x-2 w-full mt-auto">
-                <button
-                  onClick={() => downloadFile("/draxor-logo-gold.svg", "draxor-střiška-gold.svg")}
-                  className="flex-1 py-2 px-3 bg-[#1c1611] hover:bg-[#261f18] border border-[#c59b6d]/30 text-xs font-bold text-[#d8a876] rounded-xl flex items-center justify-center space-x-1 transition-colors"
-                >
-                  <Download size={13} />
-                  <span>SVG</span>
-                </button>
-                <button
-                  onClick={() => downloadPNG("#d8a876", "draxor-střiška-gold.png")}
-                  className="flex-1 py-2 px-3 bg-[#c59b6d] hover:bg-[#d8a876] text-xs font-bold text-[#120e0b] rounded-xl flex items-center justify-center space-x-1 transition-colors"
-                >
-                  <Download size={13} />
-                  <span>PNG</span>
-                </button>
-              </div>
-            </div>
-
-            {/* White Roof */}
-            <div className="bg-[#121212] p-5 rounded-2xl border border-[#221c16] flex flex-col items-center text-center">
-              <div className="w-28 h-28 flex items-center justify-center mb-3">
-                <svg viewBox="0 0 100 100" className="w-20 h-20">
-                  <path
-                    d="M6 64 L50 24 L94 64"
-                    stroke="#ffffff"
-                    strokeWidth="11"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    fill="none"
-                  />
-                </svg>
-              </div>
-              <span className="font-bold text-sm text-[#f5f2ed] mb-1">Bílá stříška</span>
-              <span className="text-[11px] text-[#8f8274] mb-3">Jednobarevná světlá</span>
-              <div className="flex space-x-2 w-full mt-auto">
-                <button
-                  onClick={() => downloadFile("/draxor-logo-white.svg", "draxor-střiška-white.svg")}
-                  className="flex-1 py-2 px-3 bg-[#1c1611] hover:bg-[#261f18] border border-[#3d2e1e] text-xs font-bold text-[#f5f2ed] rounded-xl flex items-center justify-center space-x-1 transition-colors"
-                >
-                  <Download size={13} />
-                  <span>SVG</span>
-                </button>
-                <button
-                  onClick={() => downloadPNG("#ffffff", "draxor-střiška-white.png")}
-                  className="flex-1 py-2 px-3 bg-[#f5f2ed] hover:bg-white text-xs font-bold text-[#120e0b] rounded-xl flex items-center justify-center space-x-1 transition-colors"
-                >
-                  <Download size={13} />
-                  <span>PNG</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Black Roof */}
-            <div className="bg-[#f5f2ed] p-5 rounded-2xl border border-[#221c16] flex flex-col items-center text-center">
-              <div className="w-28 h-28 flex items-center justify-center mb-3">
-                <svg viewBox="0 0 100 100" className="w-20 h-20">
-                  <path
-                    d="M6 64 L50 24 L94 64"
-                    stroke="#120e0b"
-                    strokeWidth="11"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    fill="none"
-                  />
-                </svg>
-              </div>
-              <span className="font-bold text-sm text-[#120e0b] mb-1">Černá stříška</span>
-              <span className="text-[11px] text-[#6b6259] mb-3">Pro světlé tiskoviny</span>
-              <div className="flex space-x-2 w-full mt-auto">
-                <button
-                  onClick={() => downloadFile("/draxor-logo-black.svg", "draxor-střiška-black.svg")}
-                  className="flex-1 py-2 px-3 bg-[#e2dad1] hover:bg-[#d4cbbf] text-xs font-bold text-[#120e0b] rounded-xl flex items-center justify-center space-x-1 transition-colors"
-                >
-                  <Download size={13} />
-                  <span>SVG</span>
-                </button>
-                <button
-                  onClick={() => downloadPNG("#120e0b", "draxor-střiška-black.png")}
-                  className="flex-1 py-2 px-3 bg-[#120e0b] hover:bg-[#201913] text-xs font-bold text-[#f5f2ed] rounded-xl flex items-center justify-center space-x-1 transition-colors"
-                >
-                  <Download size={13} />
-                  <span>PNG</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Full Logo with Typography */}
-            <div className="bg-[#121212] p-5 rounded-2xl border border-[#221c16] flex flex-col items-center text-center">
-              <div className="w-full h-28 flex items-center justify-center px-2 mb-3">
-                <div className="flex items-center space-x-3">
-                  <svg viewBox="0 0 100 100" className="w-11 h-11 flex-shrink-0">
-                    <path
-                      d="M6 64 L50 24 L94 64"
-                      stroke="#d8a876"
-                      strokeWidth="11"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      fill="none"
-                    />
-                  </svg>
-                  <span className="font-black text-2xl tracking-tight text-[#fbf8f5]">DRAXOR</span>
+            {logoDownloads.map((item) => (
+              <div
+                key={item.file}
+                className="bg-[#121212] p-5 rounded-2xl border border-[#221c16] flex flex-col items-center text-center"
+              >
+                <div className={`w-full rounded-xl mb-3 px-4 py-5 flex items-center justify-center ${item.frame}`}>
+                  <img src={item.preview} alt="" className={item.previewClass} />
+                </div>
+                <span className="font-bold text-sm text-[#f5f2ed] mb-1">{item.label}</span>
+                <span className="text-[11px] text-[#8f8274] mb-3">{item.note}</span>
+                <div className="flex space-x-2 w-full mt-auto">
+                  <button
+                    type="button"
+                    onClick={() => downloadFile(item.svg, `${item.file}.svg`)}
+                    className="flex-1 py-2 px-3 bg-[#1c1611] hover:bg-[#261f18] border border-[#c59b6d]/30 text-xs font-bold text-[#d8a876] rounded-xl flex items-center justify-center space-x-1 transition-colors"
+                  >
+                    <Download size={13} />
+                    <span>SVG</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => downloadFile(item.png, `${item.file}.png`)}
+                    className="flex-1 py-2 px-3 bg-[#c59b6d] hover:bg-[#d8a876] text-xs font-bold text-[#120e0b] rounded-xl flex items-center justify-center space-x-1 transition-colors"
+                  >
+                    <Download size={13} />
+                    <span>PNG</span>
+                  </button>
                 </div>
               </div>
-              <span className="font-bold text-sm text-[#f5f2ed] mb-1">Logo s nápisem</span>
-              <span className="text-[11px] text-[#8f8274] mb-3">Kompletní značka</span>
-              <div className="flex space-x-2 w-full mt-auto">
-                <button
-                  onClick={() => downloadFile("/draxor-full-logo.svg", "draxor-kompletni-logo.svg")}
-                  className="flex-1 py-2 px-3 bg-[#1c1611] hover:bg-[#261f18] border border-[#c59b6d]/30 text-xs font-bold text-[#d8a876] rounded-xl flex items-center justify-center space-x-1 transition-colors"
-                >
-                  <Download size={13} />
-                  <span>SVG</span>
-                </button>
-                <button
-                  onClick={() => downloadPNG("#d8a876", "draxor-kompletni-logo.png", true)}
-                  className="flex-1 py-2 px-3 bg-[#c59b6d] hover:bg-[#d8a876] text-xs font-bold text-[#120e0b] rounded-xl flex items-center justify-center space-x-1 transition-colors"
-                >
-                  <Download size={13} />
-                  <span>PNG</span>
-                </button>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </motion.div>
@@ -1343,7 +1220,7 @@ const Footer = ({ onOpenLogoDownload, onHome }: { onOpenLogoDownload: () => void
       <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
         <div className="space-y-4">
           <div className="flex items-center space-x-3.5">
-            <DraxorLogo className="w-11 h-11" />
+            <DraxorLogo className="h-8 w-auto" />
             <span className="text-2xl font-black tracking-tighter text-[#fbf8f5]">DRAXOR</span>
           </div>
           <p className="text-[#b8aea2] text-sm leading-relaxed font-light">
