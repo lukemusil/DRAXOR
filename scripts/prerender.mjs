@@ -77,6 +77,11 @@ const required = [
   ["zásady", privacy, "Lukáš Musil"],
   ["zásady", privacy, "po dobu nezbytnou k vyřízení poptávky a následné komunikace"],
   ["zásady", privacy, "Formspree je zpracovatelem"],
+  ["úvod", home, "Loga ke stažení"],
+  ["úvod", home, "Stáhnout celý balíček (ZIP)"],
+  ["úvod", home, "draxor-strecha-gold.svg"],
+  ["úvod", home, "draxor-text-white.svg"],
+  ["úvod", home, "draxor-ikona.png"],
 ];
 
 for (const [label, html, needle] of required) {

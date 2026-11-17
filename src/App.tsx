@@ -77,7 +77,7 @@ const DraxorLogo = ({ className = "h-9 w-auto" }: { className?: string }) => (
 );
 
 // --- Layout Components ---
-const Navbar = ({ onOpenLogoDownload, onHome }: { onOpenLogoDownload?: () => void; onHome: boolean }) => {
+const Navbar = ({ onHome }: { onHome: boolean }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -106,16 +106,16 @@ const Navbar = ({ onOpenLogoDownload, onHome }: { onOpenLogoDownload?: () => voi
     >
       <div className="container mx-auto px-6 flex justify-between items-center">
         <div className="flex items-center space-x-3.5">
-          <button
-            onClick={onOpenLogoDownload}
-            title="Klikněte pro stažení loga (SVG / PNG)"
-            className="flex items-center space-x-3.5 group text-left focus:outline-none cursor-pointer"
+          <a
+            href={sectionHref(onHome, "loga")}
+            title="Loga ke stažení"
+            className="flex items-center space-x-3.5 group text-left"
           >
             <DraxorLogo className="h-9 w-auto group-hover:scale-105 transition-transform" />
             <span className="text-3xl font-black tracking-tighter text-[#f5f2ed] font-headline group-hover:text-[#d8a876] transition-colors">
               DRAXOR
             </span>
-          </button>
+          </a>
         </div>
 
         {/* Desktop Nav */}
@@ -1089,132 +1089,156 @@ const MapSection = () => {
   );
 };
 
-const logoDownloads = [
-  {
-    label: "Ikona",
-    note: "Tmavý podklad, zlatá značka",
-    preview: "/logo-ikona.svg",
-    svg: "/logo-ikona.svg",
-    png: "/logo-ikona.png",
-    file: "draxor-ikona",
-    frame: "bg-[#f5f2ed]",
-    previewClass: "h-24 w-24 object-contain",
-  },
-  {
-    label: "Tmavé",
-    note: "Pro světlé pozadí",
-    preview: "/logo-tmave.svg",
-    svg: "/logo-tmave.svg",
-    png: "/logo-tmave.png",
-    file: "draxor-znacka-tmava",
-    frame: "bg-[#f5f2ed]",
-    previewClass: "h-16 w-full object-contain",
-  },
-  {
-    label: "Zlaté",
-    note: "Pro tmavé pozadí",
-    preview: "/logo-zlate.svg",
-    svg: "/logo-zlate.svg",
-    png: "/logo-zlate.png",
-    file: "draxor-znacka-zlata",
-    frame: "bg-[#121212]",
-    previewClass: "h-16 w-full object-contain",
-  },
-  {
-    label: "Světlé",
-    note: "Pro tmavé pozadí",
-    preview: "/logo-svetle.svg",
-    svg: "/logo-svetle.svg",
-    png: "/logo-svetle.png",
-    file: "draxor-znacka-svetla",
-    frame: "bg-[#14100c]",
-    previewClass: "h-16 w-full object-contain",
-  },
-] as const;
+const logoLinkClass =
+  "inline-flex items-center gap-1 rounded-lg border border-[#c59b6d]/30 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-[#d8a876] hover:border-[#c59b6d] hover:text-[#f5eee6]";
 
-const LogoDownloadModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-  if (!isOpen) return null;
+const LogoFileLinks = ({ hrefBase, downloadBase }: { hrefBase: string; downloadBase: string }) => (
+  <div className="mt-2 flex gap-2">
+    <a className={logoLinkClass} href={`${hrefBase}.svg`} download={`${downloadBase}.svg`}>
+      <Download size={12} />
+      SVG
+    </a>
+    <a className={logoLinkClass} href={`${hrefBase}.png`} download={`${downloadBase}.png`}>
+      <Download size={12} />
+      PNG
+    </a>
+  </div>
+);
 
-  const downloadFile = (path: string, filename: string) => {
-    const link = document.createElement("a");
-    link.href = path;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+const LogoVariant = ({
+  label,
+  color,
+  src,
+  frame,
+  hrefBase,
+  downloadBase,
+  previewClass,
+}: {
+  label: string;
+  color: string;
+  src: string;
+  frame: string;
+  hrefBase: string;
+  downloadBase: string;
+  previewClass: string;
+}) => (
+  <div className="rounded-xl border border-[#221c16] bg-[#0c0c0c] p-3">
+    <div className={`flex h-16 items-center justify-center rounded-lg px-3 ${frame}`}>
+      <img src={src} alt="" className={previewClass} />
+    </div>
+    <p className="mt-2 text-sm font-bold text-[#f5f2ed]">{label}</p>
+    <p className="text-[11px] text-[#b8aea2]">{color}</p>
+    <LogoFileLinks hrefBase={hrefBase} downloadBase={downloadBase} />
+  </div>
+);
 
-  return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
-        onClick={onClose}
+const LogoDownloads = () => (
+  <section id="loga" className="mt-16 border-t border-[#1a140f] pt-10">
+    <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h2 className={footerHeading}>Loga ke stažení</h2>
+        <p className="max-w-xl text-xs leading-relaxed text-[#b8aea2]">
+          Stříška a nápis DRAXOR jsou oddělené soubory. zlatá #d8a876 · tmavá #14100c · světlá #f5f2ed
+        </p>
+      </div>
+      <a
+        href="/downloads/draxor-logo-balicek.zip"
+        download="draxor-logo-balicek.zip"
+        className="inline-flex items-center justify-center gap-2 rounded-full bg-[#c59b6d] px-5 py-3 text-xs font-bold uppercase tracking-wider text-[#120e0b] hover:bg-[#d8a876]"
       >
-        <div
-          className="relative max-w-2xl w-full bg-[#0c0c0c] border border-[#221c16] rounded-3xl p-6 sm:p-8 text-[#f5f2ed] shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="flex justify-between items-center border-b border-[#221c16] pb-4">
-            <div className="flex items-center space-x-3.5">
-              <DraxorLogo className="h-9 w-auto" />
-              <div>
-                <h3 className="text-xl font-bold font-headline uppercase text-[#fbf8f5]">Stáhnout logo DRAXOR</h3>
-                <p className="text-xs text-[#b8aea2]">Vektorové formáty (SVG) a vysoké rozlišení (PNG)</p>
-              </div>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-2 text-[#b8aea2] hover:text-[#f5f2ed] rounded-lg hover:bg-[#181818] transition-colors"
-              aria-label="Zavřít"
-            >
-              <X size={22} />
-            </button>
-          </div>
+        <Download size={14} />
+        Stáhnout celý balíček (ZIP)
+      </a>
+    </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {logoDownloads.map((item) => (
-              <div
-                key={item.file}
-                className="bg-[#121212] p-5 rounded-2xl border border-[#221c16] flex flex-col items-center text-center"
-              >
-                <div className={`w-full rounded-xl mb-3 px-4 py-5 flex items-center justify-center ${item.frame}`}>
-                  <img src={item.preview} alt="" className={item.previewClass} />
-                </div>
-                <span className="font-bold text-sm text-[#f5f2ed] mb-1">{item.label}</span>
-                <span className="text-[11px] text-[#8f8274] mb-3">{item.note}</span>
-                <div className="flex space-x-2 w-full mt-auto">
-                  <button
-                    type="button"
-                    onClick={() => downloadFile(item.svg, `${item.file}.svg`)}
-                    className="flex-1 py-2 px-3 bg-[#1c1611] hover:bg-[#261f18] border border-[#c59b6d]/30 text-xs font-bold text-[#d8a876] rounded-xl flex items-center justify-center space-x-1 transition-colors"
-                  >
-                    <Download size={13} />
-                    <span>SVG</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => downloadFile(item.png, `${item.file}.png`)}
-                    className="flex-1 py-2 px-3 bg-[#c59b6d] hover:bg-[#d8a876] text-xs font-bold text-[#120e0b] rounded-xl flex items-center justify-center space-x-1 transition-colors"
-                  >
-                    <Download size={13} />
-                    <span>PNG</span>
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+    <div className="space-y-6">
+      <div>
+        <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-[#d8a876]">Stříška</h3>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <LogoVariant
+            label="Zlatá"
+            color="zlatá #d8a876"
+            src="/logo-zlate.svg"
+            frame="bg-[#121212]"
+            hrefBase="/logo-zlate"
+            downloadBase="draxor-strecha-gold"
+            previewClass="h-10 w-full object-contain"
+          />
+          <LogoVariant
+            label="Světlá"
+            color="světlá #f5f2ed"
+            src="/logo-svetle.svg"
+            frame="bg-[#14100c]"
+            hrefBase="/logo-svetle"
+            downloadBase="draxor-strecha-white"
+            previewClass="h-10 w-full object-contain"
+          />
+          <LogoVariant
+            label="Tmavá"
+            color="tmavá #14100c"
+            src="/logo-tmave.svg"
+            frame="bg-[#f5f2ed]"
+            hrefBase="/logo-tmave"
+            downloadBase="draxor-strecha-black"
+            previewClass="h-10 w-full object-contain"
+          />
         </div>
-      </motion.div>
-    </AnimatePresence>
-  );
-};
+      </div>
+
+      <div>
+        <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-[#d8a876]">Nápis DRAXOR</h3>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <LogoVariant
+            label="Zlatá"
+            color="zlatá #d8a876"
+            src="/draxor-text-gold.svg"
+            frame="bg-[#121212]"
+            hrefBase="/draxor-text-gold"
+            downloadBase="draxor-text-gold"
+            previewClass="h-8 w-full object-contain"
+          />
+          <LogoVariant
+            label="Světlá"
+            color="světlá #f5f2ed"
+            src="/draxor-text-white.svg"
+            frame="bg-[#14100c]"
+            hrefBase="/draxor-text-white"
+            downloadBase="draxor-text-white"
+            previewClass="h-8 w-full object-contain"
+          />
+          <LogoVariant
+            label="Tmavá"
+            color="tmavá #14100c"
+            src="/draxor-text-black.svg"
+            frame="bg-[#f5f2ed]"
+            hrefBase="/draxor-text-black"
+            downloadBase="draxor-text-black"
+            previewClass="h-8 w-full object-contain"
+          />
+        </div>
+      </div>
+
+      <div>
+        <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-[#d8a876]">Ikona</h3>
+        <div className="max-w-xs">
+          <LogoVariant
+            label="Ikona"
+            color="podklad #14100c, značka #d8a876"
+            src="/logo-ikona.svg"
+            frame="bg-[#e7e1d8]"
+            hrefBase="/logo-ikona"
+            downloadBase="draxor-ikona"
+            previewClass="h-14 w-14 object-contain"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+);
 
 const footerHeading = "text-sm font-bold mb-6 font-headline uppercase tracking-widest text-[#d8a876]";
 
-const Footer = ({ onOpenLogoDownload, onHome }: { onOpenLogoDownload: () => void; onHome: boolean }) => (
+const Footer = ({ onHome }: { onHome: boolean }) => (
   <footer className="bg-black text-[#f5f2ed] py-16 border-t border-[#1a140f]">
     <div className="container mx-auto px-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
@@ -1226,16 +1250,6 @@ const Footer = ({ onOpenLogoDownload, onHome }: { onOpenLogoDownload: () => void
           <p className="text-[#b8aea2] text-sm leading-relaxed font-light">
             Tvoříme vaši vizi ve dřevě a kovu s precizností a vášní. Od nadčasových dřevostaveb po moderní hliníkové konstrukce a akustické prvky.
           </p>
-          <div className="pt-2 flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={onOpenLogoDownload}
-              className="inline-flex items-center space-x-2 bg-[#121212] hover:bg-[#1c1611] border border-[#c59b6d]/35 hover:border-[#c59b6d] px-3.5 py-2 rounded-xl text-xs font-bold text-[#d8a876] transition-all"
-            >
-              <Download size={13} />
-              <span>Stáhnout logo</span>
-            </button>
-          </div>
           <div className="flex space-x-4 pt-2">
             <a
               href={siteConfig.instagramUrl}
@@ -1363,6 +1377,8 @@ const Footer = ({ onOpenLogoDownload, onHome }: { onOpenLogoDownload: () => void
         </div>
       </div>
 
+      <LogoDownloads />
+
       <div className="mt-16 pt-8 border-t border-[#1a140f] space-y-6">
         <div className="space-y-2 text-sm text-[#b8aea2] font-light">
           <h2 className={footerHeading}>Identifikace podnikatele</h2>
@@ -1407,7 +1423,6 @@ function NotFound() {
 }
 
 export default function App({ initialPath }: { initialPath?: string }) {
-  const [logoModalOpen, setLogoModalOpen] = useState(false);
   const path = normalizePath(initialPath ?? (typeof window !== "undefined" ? window.location.pathname : "/"));
   const kind = pageKind(path);
   const onHome = kind === "home";
@@ -1420,7 +1435,7 @@ export default function App({ initialPath }: { initialPath?: string }) {
 
   return (
     <div className="bg-black min-h-screen selection:bg-[#c59b6d] selection:text-[#120e0b] font-sans antialiased text-[#f5f2ed]">
-      <Navbar onOpenLogoDownload={() => setLogoModalOpen(true)} onHome={onHome} />
+      <Navbar onHome={onHome} />
       <main>
         {kind === "home" && (
           <>
@@ -1438,8 +1453,7 @@ export default function App({ initialPath }: { initialPath?: string }) {
         {kind === "privacy" && <PrivacyPolicy />}
         {kind === "notFound" && <NotFound />}
       </main>
-      <Footer onOpenLogoDownload={() => setLogoModalOpen(true)} onHome={onHome} />
-      <LogoDownloadModal isOpen={logoModalOpen} onClose={() => setLogoModalOpen(false)} />
+      <Footer onHome={onHome} />
     </div>
   );
 }
