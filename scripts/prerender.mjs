@@ -76,7 +76,7 @@ const required = [
   ["zásady", privacy, "Zásady ochrany osobních údajů"],
   ["zásady", privacy, "Lukáš Musil"],
   ["zásady", privacy, "po dobu nezbytnou k vyřízení poptávky a následné komunikace"],
-  ["zásady", privacy, "Formspree"],
+  ["zásady", privacy, "Formspree je zpracovatelem"],
 ];
 
 for (const [label, html, needle] of required) {
@@ -113,6 +113,24 @@ if (jsonLd.name !== "Lukáš Musil" || jsonLd.legalName !== "Lukáš Musil" || j
 }
 if (jsonLd.address?.addressLocality !== "Brno" || jsonLd.address?.streetAddress) {
   console.error("JSON-LD musí mít sídlo jen jako Brno, bez ulice.");
+  process.exit(1);
+}
+
+const clientJs = fs
+  .readdirSync(path.join(root, "dist/assets"))
+  .filter((name) => name.endsWith(".js"))
+  .map((name) => fs.readFileSync(path.join(root, "dist/assets", name), "utf8"))
+  .join("\n");
+if (!clientJs.includes('formspreeId:"mwloonzl"') || !clientJs.includes("https://formspree.io/f/")) {
+  console.error("Klient neposílá poptávku na https://formspree.io/f/mwloonzl.");
+  process.exit(1);
+}
+if (!clientJs.includes('Accept:"application/json"')) {
+  console.error("Klient neposílá hlavičku Accept: application/json.");
+  process.exit(1);
+}
+if (!clientJs.includes(".ok")) {
+  console.error("Klient neukazuje úspěch jen při odpovědi 2xx.");
   process.exit(1);
 }
 
