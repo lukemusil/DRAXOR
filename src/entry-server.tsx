@@ -2,7 +2,18 @@ import { StrictMode } from "react";
 import { renderToString } from "react-dom/server";
 import App from "./App";
 import { images } from "./image-manifest";
-import { buildLocalBusinessJsonLd, normalizePath, pageKind, seo, siteConfig } from "./site.config";
+import {
+  analyticsHeadHtml,
+  buildLocalBusinessJsonLd,
+  enabledAnalytics,
+  googleVerificationToken,
+  normalizePath,
+  pageKind,
+  priceFromLabel,
+  productPrices,
+  seo,
+  siteConfig,
+} from "./site.config";
 
 export function render(url: string): string {
   const path = normalizePath(url);
@@ -34,5 +45,17 @@ export function documentMeta(url: string) {
     robots: kind === "notFound" ? "noindex, follow" : "index, follow",
     jsonLd: kind === "home" ? buildLocalBusinessJsonLd() : null,
     preloadHero: kind === "home" ? preload : null,
+    extraHead: [
+      googleVerificationToken()
+        ? `<meta name="google-site-verification" content="${googleVerificationToken()}" />`
+        : "",
+      analyticsHeadHtml(),
+    ]
+      .filter(Boolean)
+      .join("\n"),
+    analyticsEnabled: Boolean(enabledAnalytics()),
+    googleVerification: googleVerificationToken(),
+    showBlog: siteConfig.showBlog,
+    hasPrices: Object.keys(productPrices).some((id) => priceFromLabel(id) !== null),
   };
 }

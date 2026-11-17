@@ -28,7 +28,16 @@ import { ConfigValue } from "./components/ConfigValue";
 import { ResponsiveImage, type ResponsiveAsset } from "./components/ResponsiveImage";
 import { images } from "./image-manifest";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy";
-import { formspreeEndpoint, normalizePath, pageKind, routes, siteConfig } from "./site.config";
+import {
+  budgetRanges,
+  buildingTypes,
+  formspreeEndpoint,
+  normalizePath,
+  pageKind,
+  priceFromLabel,
+  routes,
+  siteConfig,
+} from "./site.config";
 
 function sectionHref(onHome: boolean, id: string) {
   return onHome ? `#${id}` : `/#${id}`;
@@ -42,6 +51,7 @@ interface Product {
   category: string;
   image: ResponsiveAsset;
   tag?: string;
+  buildingType: (typeof buildingTypes)[number];
 }
 
 interface Material {
@@ -100,9 +110,10 @@ const Navbar = ({ onOpenLogoDownload, onHome }: { onOpenLogoDownload?: () => voi
 
   const navItems = [
     { name: "Produkty", id: "produkty" },
+    { name: "Spolupráce", id: "spoluprace" },
     { name: "Materiály", id: "materialy" },
     { name: "Galerie", id: "galerie" },
-    { name: "Blog", id: "blog" },
+    ...(siteConfig.showBlog ? [{ name: "Blog", id: "blog" }] : []),
     { name: "Poptávka", id: "poptavka" },
   ];
 
@@ -130,7 +141,7 @@ const Navbar = ({ onOpenLogoDownload, onHome }: { onOpenLogoDownload?: () => voi
         </div>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex space-x-6 items-center">
+        <div className="hidden lg:flex space-x-4 xl:space-x-5 items-center">
           {navItems.map((item) => (
             <a
               key={item.id}
@@ -165,7 +176,7 @@ const Navbar = ({ onOpenLogoDownload, onHome }: { onOpenLogoDownload?: () => voi
         <button
           id="mobile-menu-toggle"
           aria-label="Menu"
-          className="md:hidden text-[#f5f2ed] p-2 focus:outline-none"
+          className="lg:hidden text-[#f5f2ed] p-2 focus:outline-none"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
           {mobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
@@ -179,7 +190,7 @@ const Navbar = ({ onOpenLogoDownload, onHome }: { onOpenLogoDownload?: () => voi
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-black/98 backdrop-blur-xl border-t border-[#221c16] flex flex-col px-6 py-8 space-y-5"
+            className="lg:hidden bg-black/98 backdrop-blur-xl border-t border-[#221c16] flex flex-col px-6 py-8 space-y-5"
           >
             {navItems.map((item) => (
               <a
@@ -326,7 +337,7 @@ const Features = () => {
   );
 };
 
-const FeaturedProducts = () => {
+const FeaturedProducts = ({ onInquire }: { onInquire: (buildingType: string) => void }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   const products: Product[] = [
@@ -337,6 +348,7 @@ const FeaturedProducts = () => {
       category: "Stavby",
       image: images.aframe,
       tag: "50 m²",
+      buildingType: "A-frame chata",
     },
     {
       id: "prod-5",
@@ -345,6 +357,7 @@ const FeaturedProducts = () => {
       category: "Stavby",
       image: images.srub,
       tag: "50 m²",
+      buildingType: "Srub",
     },
     {
       id: "prod-1",
@@ -352,6 +365,7 @@ const FeaturedProducts = () => {
       description: "Zakázková nízkoenergetická dřevostavba s precizní falcovanou střechou, modřínovou fasádou a velkoformátovým prosklením.",
       category: "Stavby",
       image: images.timberHouse,
+      buildingType: "Dřevostavba",
     },
     {
       id: "prod-2",
@@ -360,6 +374,7 @@ const FeaturedProducts = () => {
       category: "Interiér",
       image: images.acoustic,
       tag: "Design",
+      buildingType: "Akustické panely",
     },
   ];
 
@@ -454,11 +469,15 @@ const FeaturedProducts = () => {
               <h3 className="text-xl font-bold mb-2 font-headline text-[#fbf8f5] group-hover:text-[#d8a876] transition-colors uppercase tracking-tight">
                 {product.title}
               </h3>
+              {priceFromLabel(product.id) && (
+                <p className="text-sm font-semibold text-[#d8a876] mb-2">{priceFromLabel(product.id)}</p>
+              )}
               <p className="text-[#b8aea2] text-sm leading-relaxed font-light mb-4 flex-grow">
                 {product.description}
               </p>
               <a
                 href="#poptavka"
+                onClick={() => onInquire(product.buildingType)}
                 className="inline-flex items-center space-x-2 text-xs uppercase font-bold tracking-widest text-[#d8a876] hover:text-[#f5eee6] transition-colors group-hover:translate-x-1 duration-300"
               >
                 <span>Poptat tento model</span>
@@ -467,6 +486,63 @@ const FeaturedProducts = () => {
             </motion.div>
           ))}
         </div>
+      </div>
+    </section>
+  );
+};
+
+const ProcessSection = () => {
+  const steps = [
+    {
+      title: "Konzultace",
+      text: "Probereme pozemek, účel stavby a vaše představy. Stačí nezávazný hovor nebo schůzka.",
+    },
+    {
+      title: "Návrh a nabídka",
+      text: "Připravíme návrh řešení a nezávaznou nabídku. Termíny upřesníme v nabídce.",
+    },
+    {
+      title: "Výroba",
+      text: "Po odsouhlasení vyrábíme konstrukci a prvky s důrazem na přesnost a zvolený materiál.",
+    },
+    {
+      title: "Montáž",
+      text: "Stavbu složíme na místě a navážeme na připravené základy podle domluveného rozsahu.",
+    },
+    {
+      title: "Předání",
+      text: "Hotové dílo spolu projdeme, předáme podklady a domluvíme, co bude dál.",
+    },
+  ];
+
+  return (
+    <section className="py-24 bg-black text-[#f5f2ed] border-t border-[#1f1914]" id="spoluprace">
+      <div className="container mx-auto px-6">
+        <div className="max-w-3xl mb-14">
+          <span className="text-xs uppercase tracking-[0.2em] text-[#d8a876] font-bold block mb-2">
+            Od první schůzky po klíče
+          </span>
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tighter mb-4 font-headline uppercase text-[#fbf8f5]">
+            Jak spolupráce probíhá
+          </h2>
+          <p className="text-[#b8aea2] text-lg font-light">
+            Každá zakázka je jiná. Postup je pořád stejný: nejdřív si rozumíme, pak teprve stavíme.
+          </p>
+        </div>
+        <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+          {steps.map((step, index) => (
+            <li
+              key={step.title}
+              className="flex flex-col p-6 rounded-2xl bg-[#0c0c0c] border border-[#221c16] hover:border-[#c59b6d]/40 transition-colors"
+            >
+              <span className="w-10 h-10 mb-4 rounded-full bg-[#c59b6d] text-[#120e0b] text-sm font-bold flex items-center justify-center">
+                {index + 1}
+              </span>
+              <h3 className="text-lg font-bold font-headline tracking-tight text-[#fbf8f5] mb-2">{step.title}</h3>
+              <p className="text-[#d6cec3] text-sm leading-relaxed font-light">{step.text}</p>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );
@@ -776,9 +852,22 @@ const BlogSection = () => {
 const fieldClass =
   "w-full bg-[#121212] border border-[#221c16] rounded-xl p-4 text-sm text-[#f5f2ed] placeholder-[#8f8274] focus:outline-none focus:border-[#c59b6d] focus:bg-[#181818] transition-colors";
 
-const QuoteSection = () => {
-  const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });
+const QuoteSection = ({ preferredType }: { preferredType: string }) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+    buildingType: preferredType,
+    location: "",
+    budget: "",
+  });
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error" | "mailto">("idle");
+
+  useEffect(() => {
+    if (!preferredType) return;
+    setFormData((current) => ({ ...current, buildingType: preferredType }));
+  }, [preferredType]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -786,7 +875,17 @@ const QuoteSection = () => {
 
     const endpoint = formspreeEndpoint();
     const subject = `Poptávka DRAXOR – ${formData.name}`;
-    const body = `Jméno: ${formData.name}\nE-mail: ${formData.email}\nTelefon: ${formData.phone || "Neuvedeno"}\n\nZpráva k projektu:\n${formData.message}`;
+    const body = [
+      `Jméno: ${formData.name}`,
+      `E-mail: ${formData.email}`,
+      `Telefon: ${formData.phone || "Neuvedeno"}`,
+      `Typ stavby: ${formData.buildingType || "Neuvedeno"}`,
+      `Lokalita stavby: ${formData.location || "Neuvedeno"}`,
+      `Orientační rozpočet: ${formData.budget || "Neuvedeno"}`,
+      "",
+      "Zpráva k projektu:",
+      formData.message,
+    ].join("\n");
 
     if (!endpoint) {
       window.location.href = `mailto:${siteConfig.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -807,6 +906,9 @@ const QuoteSection = () => {
           email: formData.email,
           phone: formData.phone,
           message: formData.message,
+          typ_stavby: formData.buildingType,
+          lokalita_stavby: formData.location,
+          orientacni_rozpocet: formData.budget,
           _subject: subject,
         }),
       });
@@ -817,7 +919,15 @@ const QuoteSection = () => {
       }
 
       setStatus("success");
-      setFormData({ name: "", email: "", phone: "", message: "" });
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        message: "",
+        buildingType: "",
+        location: "",
+        budget: "",
+      });
     } catch {
       setStatus("error");
     }
@@ -1000,6 +1110,59 @@ const QuoteSection = () => {
                     />
                   </div>
                   <div>
+                    <label htmlFor="quote-type" className="block text-[10px] uppercase tracking-widest text-[#d6cec3] font-semibold mb-1.5">
+                      Typ stavby
+                    </label>
+                    <select
+                      id="quote-type"
+                      name="typ_stavby"
+                      value={formData.buildingType}
+                      onChange={(e) => setFormData({ ...formData, buildingType: e.target.value })}
+                      className={fieldClass}
+                    >
+                      <option value="">Vyberte typ</option>
+                      {buildingTypes.map((type) => (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label htmlFor="quote-location" className="block text-[10px] uppercase tracking-widest text-[#d6cec3] font-semibold mb-1.5">
+                      Lokalita stavby
+                    </label>
+                    <input
+                      id="quote-location"
+                      name="lokalita_stavby"
+                      type="text"
+                      autoComplete="address-level2"
+                      placeholder="Obec nebo katastr"
+                      value={formData.location}
+                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                      className={fieldClass}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="quote-budget" className="block text-[10px] uppercase tracking-widest text-[#d6cec3] font-semibold mb-1.5">
+                      Orientační rozpočet
+                    </label>
+                    <select
+                      id="quote-budget"
+                      name="orientacni_rozpocet"
+                      value={formData.budget}
+                      onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
+                      className={fieldClass}
+                    >
+                      <option value="">Nechci uvádět</option>
+                      {budgetRanges.map((range) => (
+                        <option key={range} value={range}>
+                          {range}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
                     <label htmlFor="quote-message" className="sr-only">
                       Zpráva
                     </label>
@@ -1023,8 +1186,8 @@ const QuoteSection = () => {
                     <ArrowRight size={18} />
                   </button>
                   <p className="text-[11px] leading-relaxed text-[#8f8274]">
-                    Odesláním berete na vědomí zpracování jména, e-mailu, telefonu a textu zprávy za účelem vyřízení
-                    poptávky. Více v{" "}
+                    Odesláním berete na vědomí zpracování jména, e-mailu, telefonu, typu stavby, lokality, případného
+                    rozpočtu a textu zprávy za účelem vyřízení poptávky. Více v{" "}
                     <a href={routes.privacy} className="text-[#d8a876] underline underline-offset-4">
                       Zásadách ochrany osobních údajů
                     </a>
@@ -1402,10 +1565,17 @@ const Footer = ({ onOpenLogoDownload, onHome }: { onOpenLogoDownload: () => void
               </a>
             </li>
             <li>
-              <a href={sectionHref(onHome, "blog")} className="hover:text-[#d8a876] transition-colors">
-                Blog & Tipy
+              <a href={sectionHref(onHome, "spoluprace")} className="hover:text-[#d8a876] transition-colors">
+                Jak spolupráce probíhá
               </a>
             </li>
+            {siteConfig.showBlog && (
+              <li>
+                <a href={sectionHref(onHome, "blog")} className="hover:text-[#d8a876] transition-colors">
+                  Blog & Tipy
+                </a>
+              </li>
+            )}
             <li>
               <a href={sectionHref(onHome, "poptavka")} className="hover:text-[#d8a876] transition-colors">
                 Nezávazná poptávka
@@ -1529,8 +1699,42 @@ function NotFound() {
   );
 }
 
+function MobileCallButton() {
+  const [hide, setHide] = useState(false);
+
+  useEffect(() => {
+    const targets = [document.getElementById("poptavka"), document.querySelector("footer")].filter(
+      (node): node is HTMLElement => node instanceof HTMLElement,
+    );
+    const visible = new Set<Element>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) visible.add(entry.target);
+          else visible.delete(entry.target);
+        }
+        setHide(visible.size > 0);
+      },
+      { threshold: 0.12 },
+    );
+    targets.forEach((target) => observer.observe(target));
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <a
+      href={`tel:${siteConfig.phoneTel}`}
+      className={`${hide ? "hidden" : "md:hidden"} fixed bottom-4 right-4 z-40 inline-flex items-center gap-2 bg-[#c59b6d] text-[#120e0b] hover:bg-[#d8a876] px-5 py-3 rounded-full text-sm font-bold uppercase tracking-wider shadow-lg shadow-black/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f5eee6]`}
+    >
+      <Phone size={16} />
+      Zavolat
+    </a>
+  );
+}
+
 export default function App({ initialPath }: { initialPath?: string }) {
   const [logoModalOpen, setLogoModalOpen] = useState(false);
+  const [inquiryType, setInquiryType] = useState("");
   const path = normalizePath(initialPath ?? (typeof window !== "undefined" ? window.location.pathname : "/"));
   const kind = pageKind(path);
   const onHome = kind === "home";
@@ -1549,12 +1753,13 @@ export default function App({ initialPath }: { initialPath?: string }) {
           <>
             <Hero />
             <Features />
-            <FeaturedProducts />
+            <FeaturedProducts onInquire={setInquiryType} />
+            <ProcessSection />
             <MaterialsSection />
             <GallerySection />
             <InstagramFeed />
-            <BlogSection />
-            <QuoteSection />
+            {siteConfig.showBlog && <BlogSection />}
+            <QuoteSection preferredType={inquiryType} />
             <MapSection />
           </>
         )}
@@ -1563,6 +1768,7 @@ export default function App({ initialPath }: { initialPath?: string }) {
       </main>
       <Footer onOpenLogoDownload={() => setLogoModalOpen(true)} onHome={onHome} />
       <LogoDownloadModal isOpen={logoModalOpen} onClose={() => setLogoModalOpen(false)} />
+      <MobileCallButton />
     </div>
   );
 }

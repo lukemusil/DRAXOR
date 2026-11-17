@@ -46,6 +46,7 @@ function applyMeta(html, meta) {
     ? `<link rel="preload" as="image" href="${escapeAttr(meta.preloadHero.href)}" type="image/avif" imagesrcset="${escapeAttr(meta.preloadHero.imagesrcset)}" imagesizes="${escapeAttr(meta.preloadHero.imagesizes)}" fetchpriority="high" />`
     : "";
   html = html.replace("<!--hero-preload-->", preload);
+  html = html.replace("<!--extra-head-->", meta.extraHead || "");
   return html;
 }
 
@@ -77,6 +78,12 @@ const required = [
   ["zásady", privacy, "Lukáš Musil"],
   ["zásady", privacy, "po dobu nezbytnou k vyřízení poptávky a následné komunikace"],
   ["zásady", privacy, "Formspree je zpracovatelem"],
+  ["úvod", home, "Jak spolupráce probíhá"],
+  ["úvod", home, "Termíny upřesníme v nabídce"],
+  ["úvod", home, "Typ stavby"],
+  ["úvod", home, "Lokalita stavby"],
+  ["úvod", home, "Orientační rozpočet"],
+  ["úvod", home, "Zavolat"],
 ];
 
 for (const [label, html, needle] of required) {
@@ -84,6 +91,45 @@ for (const [label, html, needle] of required) {
     console.error(`V prerenderu „${label}“ chybí: ${needle}`);
     process.exit(1);
   }
+}
+
+const homeMeta = documentMeta("/");
+if (homeMeta.showBlog) {
+  if (!home.includes("Z našeho blogu")) {
+    console.error("showBlog je zapnuté, ale blog v HTML chybí.");
+    process.exit(1);
+  }
+} else if (home.includes("Z našeho blogu")) {
+  console.error("Blog má být skrytý, dokud není showBlog zapnuté.");
+  process.exit(1);
+}
+if (homeMeta.hasPrices) {
+  if (!home.includes("Cena od")) {
+    console.error("Vyplněná cena se v HTML neobjevila.");
+    process.exit(1);
+  }
+} else if (home.includes("Cena od")) {
+  console.error("Cena se nesmí vypsat, dokud není v productPrices vyplněná.");
+  process.exit(1);
+}
+
+if (homeMeta.googleVerification) {
+  if (!home.includes(`name="google-site-verification" content="${homeMeta.googleVerification}"`)) {
+    console.error("Chybí meta tag Google Search Console.");
+    process.exit(1);
+  }
+} else if (home.includes("google-site-verification")) {
+  console.error("Ověření Search Console se vložilo, přestože je prázdné.");
+  process.exit(1);
+}
+if (homeMeta.analyticsEnabled) {
+  if (!privacy.includes("Návštěvnost webu")) {
+    console.error("Zapnutá analytika musí být v zásadách.");
+    process.exit(1);
+  }
+} else if (privacy.includes("Návštěvnost webu") || home.includes("gc.zgo.at") || home.includes("plausible.io/js")) {
+  console.error("Vypnutá analytika se nesmí objevit na webu ani v zásadách.");
+  process.exit(1);
 }
 
 if (home.includes("Poptávka byla úspěšně odeslána")) {
@@ -127,6 +173,10 @@ if (!clientJs.includes('formspreeId:"mwloonzl"') || !clientJs.includes("https://
 }
 if (!clientJs.includes('Accept:"application/json"')) {
   console.error("Klient neposílá hlavičku Accept: application/json.");
+  process.exit(1);
+}
+if (!clientJs.includes("typ_stavby") || !clientJs.includes("lokalita_stavby") || !clientJs.includes("orientacni_rozpocet")) {
+  console.error("Formulář neposílá typ stavby, lokalitu nebo rozpočet.");
   process.exit(1);
 }
 if (!clientJs.includes(".ok")) {
