@@ -80,7 +80,7 @@ const required = [
   ["úvod", home, "Loga ke stažení"],
   ["úvod", home, "Stáhnout celý balíček (ZIP)"],
   ["úvod", home, "draxor-strecha-gold.svg"],
-  ["úvod", home, "draxor-text-white.svg"],
+  ["úvod", home, "draxor-text-gold.svg"],
   ["úvod", home, "draxor-ikona.png"],
 ];
 
@@ -89,6 +89,11 @@ for (const [label, html, needle] of required) {
     console.error(`V prerenderu „${label}“ chybí: ${needle}`);
     process.exit(1);
   }
+}
+
+if (home.includes("draxor-text-white") || home.includes("draxor-strecha-black") || home.includes("logo-svetle") || home.includes("logo-tmave")) {
+  console.error("Patička má odkazovat jen na zlatou stříšku, zlatý nápis a ikonu.");
+  process.exit(1);
 }
 
 if (home.includes("Poptávka byla úspěšně odeslána")) {

@@ -1138,7 +1138,7 @@ const LogoDownloads = () => (
       <div>
         <h2 className={footerHeading}>Loga ke stažení</h2>
         <p className="max-w-xl text-xs leading-relaxed text-[#b8aea2]">
-          Stříška a nápis DRAXOR jsou oddělené soubory. zlatá #d8a876 · tmavá #14100c · světlá #f5f2ed
+          Stříška a nápis DRAXOR jsou oddělené soubory. zlatá #d8a876
         </p>
       </div>
       <a
@@ -1151,86 +1151,42 @@ const LogoDownloads = () => (
       </a>
     </div>
 
-    <div className="space-y-6">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
       <div>
         <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-[#d8a876]">Stříška</h3>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <LogoVariant
-            label="Zlatá"
-            color="zlatá #d8a876"
-            src="/logo-zlate.svg"
-            frame="bg-[#121212]"
-            hrefBase="/logo-zlate"
-            downloadBase="draxor-strecha-gold"
-            previewClass="h-10 w-full object-contain"
-          />
-          <LogoVariant
-            label="Světlá"
-            color="světlá #f5f2ed"
-            src="/logo-svetle.svg"
-            frame="bg-[#14100c]"
-            hrefBase="/logo-svetle"
-            downloadBase="draxor-strecha-white"
-            previewClass="h-10 w-full object-contain"
-          />
-          <LogoVariant
-            label="Tmavá"
-            color="tmavá #14100c"
-            src="/logo-tmave.svg"
-            frame="bg-[#f5f2ed]"
-            hrefBase="/logo-tmave"
-            downloadBase="draxor-strecha-black"
-            previewClass="h-10 w-full object-contain"
-          />
-        </div>
+        <LogoVariant
+          label="Zlatá"
+          color="zlatá #d8a876"
+          src="/logo-zlate.svg"
+          frame="bg-[#121212]"
+          hrefBase="/logo-zlate"
+          downloadBase="draxor-strecha-gold"
+          previewClass="h-10 w-full object-contain"
+        />
       </div>
-
       <div>
         <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-[#d8a876]">Nápis DRAXOR</h3>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <LogoVariant
-            label="Zlatá"
-            color="zlatá #d8a876"
-            src="/draxor-text-gold.svg"
-            frame="bg-[#121212]"
-            hrefBase="/draxor-text-gold"
-            downloadBase="draxor-text-gold"
-            previewClass="h-8 w-full object-contain"
-          />
-          <LogoVariant
-            label="Světlá"
-            color="světlá #f5f2ed"
-            src="/draxor-text-white.svg"
-            frame="bg-[#14100c]"
-            hrefBase="/draxor-text-white"
-            downloadBase="draxor-text-white"
-            previewClass="h-8 w-full object-contain"
-          />
-          <LogoVariant
-            label="Tmavá"
-            color="tmavá #14100c"
-            src="/draxor-text-black.svg"
-            frame="bg-[#f5f2ed]"
-            hrefBase="/draxor-text-black"
-            downloadBase="draxor-text-black"
-            previewClass="h-8 w-full object-contain"
-          />
-        </div>
+        <LogoVariant
+          label="Zlatá"
+          color="zlatá #d8a876"
+          src="/draxor-text-gold.svg"
+          frame="bg-[#121212]"
+          hrefBase="/draxor-text-gold"
+          downloadBase="draxor-text-gold"
+          previewClass="h-8 w-full object-contain"
+        />
       </div>
-
       <div>
         <h3 className="mb-3 text-xs font-bold uppercase tracking-widest text-[#d8a876]">Ikona</h3>
-        <div className="max-w-xs">
-          <LogoVariant
-            label="Ikona"
-            color="podklad #14100c, značka #d8a876"
-            src="/logo-ikona.svg"
-            frame="bg-[#e7e1d8]"
-            hrefBase="/logo-ikona"
-            downloadBase="draxor-ikona"
-            previewClass="h-14 w-14 object-contain"
-          />
-        </div>
+        <LogoVariant
+          label="Ikona"
+          color="zlatá #d8a876"
+          src="/logo-ikona.svg"
+          frame="bg-[#121212]"
+          hrefBase="/logo-ikona"
+          downloadBase="draxor-ikona"
+          previewClass="h-14 w-14 object-contain"
+        />
       </div>
     </div>
   </section>
