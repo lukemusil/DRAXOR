@@ -43,7 +43,7 @@ export const siteConfig = {
   dataRetention: "",
 
   /** false skryje blog i odkaz v menu. Sekce v kódu zůstává a jde znovu zapnout. */
-  showBlog: false,
+  showBlog: true,
 
   /**
    * Analytika bez cookies. Prázdné = vypnuto a v zásadách se nezmíní.

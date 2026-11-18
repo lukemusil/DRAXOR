@@ -64,14 +64,6 @@ interface Material {
   img: ResponsiveAsset;
 }
 
-interface BlogPost {
-  id: string;
-  title: string;
-  date: string;
-  image: ResponsiveAsset;
-  excerpt: string;
-}
-
 interface GalleryItem {
   image: ResponsiveAsset;
   title: string;
@@ -106,7 +98,7 @@ const Navbar = ({ onHome }: { onHome: boolean }) => {
     { name: "Spolupráce", id: "spoluprace" },
     { name: "Materiály", id: "materialy" },
     { name: "Galerie", id: "galerie" },
-    ...(siteConfig.showBlog && articles.length > 0 ? [{ name: "Blog", id: "blog" }] : []),
+    ...(siteConfig.showBlog && articles.length > 0 ? [{ name: "Blog", id: "blog", href: "/blog" }] : []),
     { name: "Poptávka", id: "poptavka" },
   ];
 
@@ -138,7 +130,7 @@ const Navbar = ({ onHome }: { onHome: boolean }) => {
           {navItems.map((item) => (
             <a
               key={item.id}
-              href={sectionHref(onHome, item.id)}
+              href={item.href ?? sectionHref(onHome, item.id)}
               className="text-[11px] uppercase tracking-widest font-bold text-[#b8aea2] hover:text-[#d8a876] transition-colors"
             >
               {item.name}
@@ -188,7 +180,7 @@ const Navbar = ({ onHome }: { onHome: boolean }) => {
             {navItems.map((item) => (
               <a
                 key={item.id}
-                href={sectionHref(onHome, item.id)}
+                href={item.href ?? sectionHref(onHome, item.id)}
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-lg font-bold text-[#d6cec3] hover:text-[#d8a876] uppercase tracking-wider font-headline transition-colors"
               >
@@ -794,25 +786,6 @@ const InstagramFeed = () => {
 };
 
 const BlogSection = () => {
-  const posts: BlogPost[] = [
-    {
-      id: "blog-1",
-      title: "Kouzlo kartáčovaného dřeva: Proč zvolit tento obklad?",
-      date: "10. května 2024",
-      image: images.brushed,
-      excerpt:
-        "Zvýrazněte duši dřeva ve svém interiéru či exteriéru. Kartáčované palubky nabízejí nezaměnitelnou 3D strukturu a vysokou odolnost.",
-    },
-    {
-      id: "blog-2",
-      title: "Vylepšete svůj prostor s akustickými dřevěnými obklady",
-      date: "1. března 2024",
-      image: images.acoustic,
-      excerpt:
-        "Správná akustika je klíčem k domácí pohodě i soustředění v kanceláři. Zjistěte, jak lamelové dřevěné panely dokáží transformovat váš prostor.",
-    },
-  ];
-
   return (
     <section className="py-24 bg-black text-[#f5f2ed] border-t border-[#1f1914]" id="blog">
       <div className="container mx-auto px-6">
@@ -824,44 +797,31 @@ const BlogSection = () => {
             Z našeho blogu
           </h2>
           <p className="text-[#b8aea2] text-lg font-light">
-            Postřehy, praktické příběhy z realizací a tipy od našeho týmu odborníků na dřevostavby.
+            Dřeviny a materiály, se kterými stavíme v Brně a na jižní Moravě.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
-          {posts.map((post) => (
-            <motion.article
-              key={post.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+          {articles.map((article) => (
+            <article
+              key={article.slug}
               className="group bg-[#0c0c0c] p-6 rounded-3xl border border-[#221c16] hover:border-[#c59b6d]/40 transition-all flex flex-col shadow-md"
             >
-              <div className="aspect-video overflow-hidden rounded-2xl mb-6 relative bg-black">
-                <ResponsiveImage
-                  image={post.image}
-                  alt={post.title}
-                  sizes="(min-width: 768px) 45vw, 100vw"
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
               <span className="text-[10px] uppercase tracking-widest text-[#d8a876] mb-2 block font-semibold">
-                {post.date}
+                {article.date}
               </span>
-              <h3 className="text-2xl font-bold mb-3 text-[#fbf8f5] group-hover:text-[#d8a876] transition-colors font-headline uppercase tracking-tight">
-                {post.title}
+              <h3 className="text-2xl font-bold mb-3 text-[#fbf8f5] group-hover:text-[#d8a876] transition-colors font-headline tracking-tight">
+                <a href={`/blog/${article.slug}`}>{article.h1}</a>
               </h3>
-              <p className="text-[#b8aea2] text-sm leading-relaxed mb-6 line-clamp-2 font-light flex-grow">
-                {post.excerpt}
-              </p>
+              <p className="text-[#b8aea2] text-sm leading-relaxed mb-6 font-light flex-grow">{article.perex}</p>
               <a
-                href="#poptavka"
+                href={`/blog/${article.slug}`}
                 className="inline-flex items-center space-x-2 text-xs font-bold uppercase tracking-widest text-[#f5f2ed] border-b border-[#c59b6d]/40 pb-1 hover:border-[#c59b6d] hover:text-[#d8a876] transition-all self-start"
               >
-                <span>Číst více / Konzultovat</span>
+                <span>Číst článek</span>
                 <ArrowRight size={14} />
               </a>
-            </motion.article>
+            </article>
           ))}
         </div>
       </div>

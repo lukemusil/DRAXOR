@@ -41,9 +41,13 @@ function applyMeta(html, meta) {
     html = replaceAttr("twitter-image", meta.ogImage);
   }
 
-  const jsonLd = meta.jsonLd
-    ? `<script type="application/ld+json">${JSON.stringify(meta.jsonLd).replaceAll("<", "\\u003c")}</script>`
-    : "";
+  const jsonLdItems = !meta.jsonLd ? [] : Array.isArray(meta.jsonLd) ? meta.jsonLd : [meta.jsonLd];
+  const jsonLd = jsonLdItems
+    .map(
+      (item) =>
+        `<script type="application/ld+json">${JSON.stringify(item).replaceAll("<", "\\u003c")}</script>`,
+    )
+    .join("\n");
   html = html.replace("<!--jsonld-->", jsonLd);
 
   const preload = meta.preloadHero
@@ -69,8 +73,10 @@ for (const route of routes) {
     console.error(`Trasa ${route.url} nemá vlastní title nebo právě jedno H1 (${route.title} / ${route.h1}, h1=${h1Count}).`);
     process.exit(1);
   }
-  if (meta.jsonLd?.["@type"] === "FAQPage") {
-    const questions = meta.jsonLd.mainEntity ?? [];
+  const jsonLdItems = !meta.jsonLd ? [] : Array.isArray(meta.jsonLd) ? meta.jsonLd : [meta.jsonLd];
+  const faqLd = jsonLdItems.find((item) => item["@type"] === "FAQPage");
+  if (faqLd) {
+    const questions = faqLd.mainEntity ?? [];
     if (!questions.length) {
       console.error(`Trasa ${route.url} má prázdné FAQ.`);
       process.exit(1);
@@ -81,6 +87,10 @@ for (const route of routes) {
         process.exit(1);
       }
     }
+  }
+  if (route.url.startsWith("/blog/") && !jsonLdItems.some((item) => item["@type"] === "Article")) {
+    console.error(`Článek ${route.url} nemá Article JSON-LD.`);
+    process.exit(1);
   }
   fs.mkdirSync(path.dirname(route.out), { recursive: true });
   fs.writeFileSync(route.out, html);
@@ -99,8 +109,18 @@ fs.writeFileSync(
   path.join(root, "dist/robots.txt"),
   "User-agent: *\nAllow: /\n\nSitemap: https://draxor.cz/sitemap.xml\n",
 );
-if (sitemap.includes("/blog")) {
-  console.error("Prázdný blog nesmí být v sitemapě.");
+const blogArticles = routes.filter((route) => route.url.startsWith("/blog/"));
+const sitemapLocs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+if (blogArticles.length === 0) {
+  if (sitemap.includes("/blog")) {
+    console.error("Prázdný blog nesmí být v sitemapě.");
+    process.exit(1);
+  }
+} else if (
+  !sitemapLocs.includes("https://draxor.cz/blog") ||
+  blogArticles.some((route) => !sitemapLocs.includes(`https://draxor.cz${route.url}`))
+) {
+  console.error("Sitemap neobsahuje blog nebo některý článek.");
   process.exit(1);
 }
 

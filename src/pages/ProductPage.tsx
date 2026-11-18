@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { ResponsiveImage } from "../components/ResponsiveImage";
+import { articlesForProduct } from "../content/articles";
 import type { Block, ProductPageData } from "../content/products";
 import { images } from "../image-manifest";
 import { siteConfig } from "../site.config";
@@ -91,6 +92,7 @@ function Blocks({ blocks, inquiryHref }: { blocks: Block[]; inquiryHref: string 
 
 export function ProductPage({ product }: { product: ProductPageData }) {
   const inquiryHref = `/?typ=${encodeURIComponent(product.buildingType)}#poptavka`;
+  const related = articlesForProduct(product.path);
 
   return (
     <article className="pt-32 pb-20">
@@ -139,6 +141,22 @@ export function ProductPage({ product }: { product: ProductPageData }) {
             Poptat {product.buildingType.toLowerCase()}
             <ArrowRight size={16} />
           </a>
+          {related.length > 0 && (
+            <div className="mt-14">
+              <h2 className="text-2xl font-bold font-headline uppercase tracking-tight text-[#fbf8f5] mb-4">
+                Mohlo by vás zajímat
+              </h2>
+              <ul className="space-y-3">
+                {related.map((article) => (
+                  <li key={article.slug}>
+                    <a href={`/blog/${article.slug}`} className="text-[#d8a876] underline underline-offset-4">
+                      {article.h1}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </article>

@@ -28,15 +28,38 @@ export function render(url: string): string {
   );
 }
 
-function faqJsonLd(product: { faqs: { q: string; a: string }[] }) {
+function faqJsonLd(page: { faqs: { q: string; a: string }[] }) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: product.faqs.map((faq) => ({
+    mainEntity: page.faqs.map((faq) => ({
       "@type": "Question",
       name: faq.q,
       acceptedAnswer: { "@type": "Answer", text: faq.a },
     })),
+  };
+}
+
+function articleJsonLd(article: { title: string; description: string; h1: string; date: string; slug: string }) {
+  const url = `${siteConfig.siteUrl}/blog/${article.slug}`;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.h1,
+    description: article.description,
+    datePublished: article.date,
+    dateModified: article.date,
+    mainEntityOfPage: url,
+    url,
+    author: { "@type": "Organization", name: siteConfig.brandName },
+    publisher: {
+      "@type": "Organization",
+      name: siteConfig.brandName,
+      logo: {
+        "@type": "ImageObject",
+        url: `${siteConfig.siteUrl}/apple-touch-icon.png`,
+      },
+    },
   };
 }
 
@@ -55,10 +78,13 @@ export function documentMeta(url: string) {
           : page.kind === "blog"
             ? {
                 title: "Blog | DRAXOR",
-                description: "Články DRAXOR o chatách, srubech a dřevostavbách. Zatím je připravujeme.",
+                description:
+                  articles.length === 0
+                    ? "Články DRAXOR o chatách, srubech a dřevostavbách. Zatím je připravujeme."
+                    : "Články DRAXOR o dřevinách a materiálech, se kterými stavíme v Brně a na jižní Moravě.",
               }
             : article
-              ? { title: `${article.title} | DRAXOR`, description: article.description }
+              ? { title: article.title, description: article.description }
               : seo.notFound;
   const canonical =
     page.kind === "home" ? `${siteConfig.siteUrl}/` : `${siteConfig.siteUrl}${path === "/404" ? "/" : path}`;
@@ -80,7 +106,13 @@ export function documentMeta(url: string) {
     ogImage,
     robots: page.kind === "notFound" || (page.kind === "blog" && articles.length === 0) ? "noindex, follow" : "index, follow",
     jsonLd:
-      page.kind === "home" ? buildLocalBusinessJsonLd() : product ? faqJsonLd(product) : null,
+      page.kind === "home"
+        ? buildLocalBusinessJsonLd()
+        : product
+          ? faqJsonLd(product)
+          : article
+            ? [articleJsonLd(article), faqJsonLd(article)]
+            : null,
     preloadHero: page.kind === "home" ? preload : null,
     extraHead: [
       googleVerificationToken()
