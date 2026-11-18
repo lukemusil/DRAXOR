@@ -97,10 +97,14 @@ ${sitemapPaths()
 fs.writeFileSync(path.join(root, "dist/sitemap.xml"), sitemap);
 fs.writeFileSync(
   path.join(root, "dist/robots.txt"),
-  "User-agent: *\nAllow: /\n\nSitemap: https://draxor.cz/sitemap.xml\n",
+  "User-agent: *\nAllow: /\nDisallow: /social/\n\nSitemap: https://draxor.cz/sitemap.xml\n",
 );
 if (sitemap.includes("/blog")) {
   console.error("Prázdný blog nesmí být v sitemapě.");
+  process.exit(1);
+}
+if (sitemap.includes("/social")) {
+  console.error("Složka /social/ nesmí být v sitemapě.");
   process.exit(1);
 }
 
