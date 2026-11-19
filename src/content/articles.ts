@@ -1,3 +1,5 @@
+import { moreArticles } from "./articles-batch";
+
 export type ArticleBlock =
   | { t: "h2"; text: string }
   | { t: "p"; text: string }
@@ -18,7 +20,7 @@ export type Article = {
   closing: ArticleBlock[];
 };
 
-export const articles: Article[] = [
+const materialArticles: Article[] = [
   {
     "slug": "smrk-kvh-a-bsh-hranoly",
     "title": "Smrkové hranoly KVH a BSH | DRAXOR",
@@ -836,6 +838,10 @@ export const articles: Article[] = [
     ]
   }
 ];
+
+export const articles: Article[] = [...materialArticles, ...moreArticles].sort(
+  (a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug, "cs"),
+);
 
 function articleText(article: Article): string {
   const chunks = [article.perex];

@@ -17,7 +17,7 @@ import {
   siteConfig,
 } from "./site.config";
 
-export { htmlRoutes, sitemapPaths };
+export { articles, htmlRoutes, sitemapPaths };
 
 export function render(url: string): string {
   const path = normalizePath(url);
