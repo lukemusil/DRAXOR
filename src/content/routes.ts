@@ -27,12 +27,21 @@ export function resolvePage(pathname: string): ResolvedPage {
   return { kind: "notFound" };
 }
 
-export function sitemapPaths(): string[] {
+export function sitemapPaths(): { loc: string; lastmod?: string }[] {
   const paths = ["/", "/ochrana-osobnich-udaju", ...productPages.map((product) => product.path)];
+  const entries: { loc: string; lastmod?: string }[] = paths.map((path) => ({
+    loc: path === "/" ? `${siteConfig.siteUrl}/` : `${siteConfig.siteUrl}${path}`,
+  }));
   if (articles.length > 0) {
-    paths.push("/blog", ...articles.map((article) => `/blog/${article.slug}`));
+    entries.push({ loc: `${siteConfig.siteUrl}/blog` });
+    for (const article of articles) {
+      entries.push({
+        loc: `${siteConfig.siteUrl}/blog/${article.slug}`,
+        lastmod: article.date,
+      });
+    }
   }
-  return paths.map((path) => (path === "/" ? `${siteConfig.siteUrl}/` : `${siteConfig.siteUrl}${path}`));
+  return entries;
 }
 
 export function htmlRoutes(): { url: string; file: string; title: string; h1: string }[] {
