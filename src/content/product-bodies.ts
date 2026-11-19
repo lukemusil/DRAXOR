@@ -613,6 +613,22 @@ export const productCopy: ProductCopy[] = [
       },
       {
         "t": "h2",
+        "text": "WPC kompozit jako alternativa k dřevu"
+      },
+      {
+        "t": "p",
+        "text": "Kromě dřevěné terasy nabízíme také terasy z WPC kompozitu, materiálu ze dřevní složky a plastu. Hodí se k domu, chatě i pergole, když chcete pravidelnější vzhled a méně péče o povrch, než jakou žádá dřevo. Odpadá typické olejování, kterým se u modřínu udržuje barva; terasu stačí pravidelně zametat a mýt."
+      },
+      {
+        "t": "p",
+        "text": "WPC není masivní dřevo. Nemá stejnou kresbu ani způsob stárnutí a na ostrém slunci, zvlášť v tmavším odstínu, umí být na dotek teplejší. Proto materiál vždy porovnáme s dřevěnou terasou podle místa, slunce a toho, jak má plocha vypadat za několik sezon."
+      },
+      {
+        "t": "p",
+        "text": "Ať zvolíte dřevo, nebo kompozit, životnost stojí na tom, co není vidět: na spodní konstrukci, spádu, odvětrání a správném kotvení. Konkrétní skladbu navrhneme podle vašeho domu a pozemku."
+      },
+      {
+        "t": "h2",
         "text": "Pro koho stavíme terasy"
       },
       {

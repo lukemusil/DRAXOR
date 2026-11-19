@@ -64,8 +64,8 @@ export function htmlRoutes(): { url: string; file: string; title: string; h1: st
     ...articles.map((article) => ({
       url: `/blog/${article.slug}`,
       file: `dist/blog/${article.slug}/index.html`,
-      title: `${article.title} | DRAXOR`,
-      h1: article.title,
+      title: article.title,
+      h1: article.h1,
     })),
     {
       url: "/404",
