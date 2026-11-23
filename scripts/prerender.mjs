@@ -6,7 +6,7 @@ const root = process.cwd();
 const templatePath = path.join(root, "dist/index.html");
 const template = fs.readFileSync(templatePath, "utf8");
 const serverEntry = path.join(root, "dist-ssr/entry-server.js");
-const { render, documentMeta, htmlRoutes, sitemapPaths } = await import(pathToFileURL(serverEntry).href);
+const { render, documentMeta, htmlRoutes, sitemapPaths, articles } = await import(pathToFileURL(serverEntry).href);
 
 function escapeAttr(value) {
   return value
@@ -100,7 +100,10 @@ for (const route of routes) {
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${sitemapPaths()
-  .map((loc) => `  <url><loc>${loc}</loc></url>`)
+  .map((entry) => {
+    const lastmod = entry.lastmod ? `<lastmod>${entry.lastmod}</lastmod>` : "";
+    return `  <url><loc>${entry.loc}</loc>${lastmod}</url>`;
+  })
   .join("\n")}
 </urlset>
 `;
@@ -122,6 +125,13 @@ if (blogArticles.length === 0) {
 ) {
   console.error("Sitemap neobsahuje blog nebo některý článek.");
   process.exit(1);
+}
+for (const article of articles) {
+  const loc = `https://draxor.cz/blog/${article.slug}`;
+  if (!sitemap.includes(`<loc>${loc}</loc><lastmod>${article.date}</lastmod>`)) {
+    console.error(`Sitemap nemá lastmod ${article.date} u ${loc}`);
+    process.exit(1);
+  }
 }
 
 const home = fs.readFileSync(path.join(root, "dist/index.html"), "utf8");

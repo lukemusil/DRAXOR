@@ -49,6 +49,9 @@ function Blocks({ blocks }: { blocks: ArticleBlock[] }) {
 }
 
 export function BlogIndex() {
+  const listed = [...articles].sort(
+    (a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug, "cs"),
+  );
   return (
     <article className="pt-32 pb-20">
       <div className="container mx-auto px-6 max-w-3xl">
@@ -60,7 +63,7 @@ export function BlogIndex() {
           </p>
         ) : (
           <ul className="space-y-8">
-            {articles.map((article) => (
+            {listed.map((article) => (
               <li key={article.slug}>
                 <p className="text-xs uppercase tracking-[0.16em] text-[#d8a876] mb-2">{article.date}</p>
                 <a href={`/blog/${article.slug}`} className="text-2xl font-bold text-[#fbf8f5] hover:text-[#d8a876]">
